@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Thêm sản phẩm</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 { text-align: center; }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .unit-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .unit-row input {
+      flex: 1;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-add {
+      background: #2563eb;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .btn-save {
+      width: 100%;
+      background: #16a34a;
+      color: white;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+
+    .btn-add:hover { background: #1d4ed8; }
+    .btn-save:hover { background: #15803d; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>➕ Thêm sản phẩm</h2>
+
+  <form method="POST" action="/products/create" enctype="multipart/form-data">
+    
+    <label>Tên sản phẩm</label>
+    <input name="name" required>
+
+    <label>Barcode</label>
+    <input name="barcode">
+
+    <label>Hình ảnh sản phẩm</label>
+    <input type="file" name="image" accept="image/*" required>
+
+    <hr>
+
+    <h3>Đơn vị bán</h3>
+    <div id="unitList">
+      <div class="unit-row">
+        <input name="unit_name[]" placeholder="Hộp / Lốc / Thùng" required>
+        <input name="price_sell[]" type="number" placeholder="Giá bán" required>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-add" onclick="addUnit()">➕ Thêm đơn vị</button>
+
+    <button type="submit" class="btn btn-save">💾 Lưu sản phẩm</button>
+  </form>
+</div>
+
+<script>
+  function addUnit() {
+    const div = document.createElement("div");
+    div.className = "unit-row";
+    div.innerHTML = `
+      <input name="unit_name[]" placeholder="Hộp / Lốc / Thùng" required>
+      <input name="price_sell[]" type="number" placeholder="Giá bán" required>
+    `;
+    document.getElementById("unitList").appendChild(div);
+  }
+</script>
+
+</body>
+</html>

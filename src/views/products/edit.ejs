@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Sửa sản phẩm</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      padding: 30px;
+    }
+
+    .container {
+      background: #fff;
+      max-width: 520px;
+      margin: auto;
+      padding: 25px 30px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #111827;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 12px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .unit-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .unit-row input {
+      flex: 1;
+    }
+
+    .btn {
+      margin-top: 18px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-save {
+      background: #22c55e;
+      color: #fff;
+    }
+
+    .btn-save:hover { background: #16a34a; }
+
+    .btn-back {
+      background: #6b7280;
+      color: #fff;
+      margin-left: 10px;
+      text-decoration: none;
+    }
+
+    .btn-back:hover { background: #4b5563; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>✏️ Sửa sản phẩm</h2>
+
+  <form action="/products/edit/<%= product.id %>" method="POST" enctype="multipart/form-data">
+
+    <label>Tên sản phẩm</label>
+    <input name="name" value="<%= product.name %>" required>
+
+    <label>Barcode</label>
+    <input name="barcode" value="<%= product.barcode %>">
+
+    <label>Đổi hình ảnh (nếu cần)</label>
+    <input type="file" name="image">
+    <input type="hidden" name="old_image" value="<%= product.image_url %>">
+
+    <hr style="margin:18px 0">
+
+    <h3>Đơn vị bán</h3>
+
+    <% product.units.forEach(unit => { %>
+      <div class="unit-row">
+        <input type="hidden" name="unit_id[]" value="<%= unit.id %>">
+        <input name="unit_name[]" value="<%= unit.unit_name %>" placeholder="Hộp / Lốc / Thùng">
+        <input name="price_sell[]" value="<%= unit.price_sell %>" placeholder="Giá">
+      </div>
+    <% }) %>
+
+    <button class="btn btn-save">💾 Cập nhật</button>
+    <a href="/" class="btn btn-back">↩ Quay lại</a>
+
+  </form>
+</div>
+
+</body>
+</html>

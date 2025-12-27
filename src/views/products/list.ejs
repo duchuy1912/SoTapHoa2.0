@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách sản phẩm</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            /* ✅ cho phép xuống dòng */
+            gap: 20px;
+            margin: 0 45px;
+        }
+
+        .product {
+            border: 1px solid #ccc;
+            padding: 15px;
+            width: 250px;
+            /* mỗi sản phẩm 1 cột */
+            border-radius: 6px;
+        }
+
+        img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .price {
+            color: red;
+            font-weight: bold;
+        }
+
+        .navbar {
+            background: #222;
+            padding: 12px;
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .navbar a {
+            color: #ddd;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        /* 👇 Khi di chuột vào */
+        .navbar a:hover {
+            background: #ff9800;
+            color: #000;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-edit {
+            background: #2563eb;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-delete {
+            background: #dc2626;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-edit:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-delete:hover {
+            background: #b91c1c;
+        }
+
+        .cart-box {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: #e5e7eb;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .qty-btn:hover {
+            background: #d1d5db;
+        }
+
+        .qty-input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-cart {
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-cart:hover {
+            background: #16a34a;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="/">🏠 Danh sách sản phẩm</a>
+        <a href="/products/create">➕ Thêm sản phẩm</a>
+        <a href="/categories">📂 Loại hàng</a>
+    </div>
+
+    <input type="text" id="searchInput" placeholder="🔍 Tìm theo tên hoặc barcode..."
+        style="padding:10px; width:300px; margin-bottom:20px;    margin-left: 40px;" onkeyup="searchProduct()" />
+
+
+    <hr>
+
+    <h1>📦 Danh sách sản phẩm</h1>
+
+    <div class="product-list">
+
+        <% products.forEach(product=> { %>
+            <div class="product" data-name="<%= product.name %>" data-barcode="<%= product.barcode || '' %>">
+
+                <!-- Hình ảnh -->
+                <img src="<%= product.image_url %>" alt="<%= product.name %>">
+                <!-- <img src="/uploads/products/cocacola.jpg" alt="cocacola"> -->
+
+
+                <!-- Tên -->
+                <h3>
+                    <%= product.name %>
+                </h3>
+
+                <!-- Chọn đơn vị -->
+                <label>Chọn đơn vị bán:</label>
+                <select onchange="changePrice(this)">
+                    <% product.units.forEach(unit=> { %>
+                        <option value="<%= unit.price_sell %>">
+                            <%= unit.unit_name %> - <%= unit.price_sell.toLocaleString() %> đ
+                        </option>
+                        <% }) %>
+                </select>
+
+                <!-- Giá -->
+                <p>
+                    Thành tiền:
+                    <span class="price">0</span> đ
+                </p>
+                <div class="action-buttons">
+                    <a class="btn-edit" href="/products/edit/<%= product.id %>">✏️ Sửa</a>
+
+                    <form method="POST" action="/products/delete/<%= product.id %>"
+                        onsubmit="return confirm('Bạn có chắc muốn xoá sản phẩm này không?');">
+                        <button type="submit" class="btn-delete">🗑 Xoá</button>
+                    </form>
+                </div>
+                <div class="cart-box">
+                    <button class="qty-btn" onclick="changeQty(this, -1)">-</button>
+                    <input class="qty-input" type="text" value="1">
+                    <button class="qty-btn" onclick="changeQty(this, 1)">+</button>
+
+                    <button class="btn-cart" onclick="addToCart(this)"><ion-icon name="add-outline"></ion-icon></button>
+                </div>
+
+
+            </div>
+            <% }) %>
+
+    </div>
+
+
+
+    <!-- <script>
+        function changePrice(select) {
+            const price = select.value;
+            const priceSpan = select.parentElement.querySelector(".price");
+            priceSpan.innerText = Number(price).toLocaleString();
+        }
+    </script> -->
+    <script>
+        function changePrice(select) {
+            const product = select.closest(".product");
+            const unitPrice = Number(select.value);
+            const qty = Number(product.querySelector(".qty-input").value || 1);
+            const priceSpan = product.querySelector(".price");
+
+            const total = unitPrice * qty;
+            priceSpan.innerText = total.toLocaleString();
+        }
+    </script>
+
+    <script>
+        // Hàm bỏ dấu tiếng Việt
+        function removeVietnameseTones(str) {
+            return str
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/đ/g, "d");
+        }
+
+        function searchProduct() {
+            const keyword = removeVietnameseTones(
+                document.getElementById("searchInput").value
+            );
+
+            const products = document.querySelectorAll(".product");
+
+            products.forEach(product => {
+                const name = removeVietnameseTones(product.dataset.name);
+                const barcode = removeVietnameseTones(product.dataset.barcode);
+
+                if (name.includes(keyword) || barcode.includes(keyword)) {
+                    product.style.display = "block";
+                } else {
+                    product.style.display = "none";
+                }
+            });
+        }
+
+        // function changePrice(select) {
+        //     const price = select.value;
+        //     const priceSpan = select.parentElement.querySelector(".price");
+        //     priceSpan.innerText = Number(price).toLocaleString();
+        // }
+    </script>
+    <script>
+        function changeQty(btn, value) {
+            const product = btn.closest(".product");
+            const input = product.querySelector(".qty-input");
+
+            let qty = parseInt(input.value) || 1;
+            qty += value;
+            if (qty < 1) qty = 1;
+            input.value = qty;
+
+            // cập nhật lại thành tiền
+            const select = product.querySelector("select");
+            changePrice(select);
+        }
+    </script>
+    <script>
+        window.onload = function () {
+            document.querySelectorAll(".product select").forEach(select => {
+                changePrice(select);
+            });
+        };
+    </script>
+    <script>
+        function addToCart(btn) {
+            const product = btn.closest(".product");
+            const name = product.dataset.name;
+            const select = product.querySelector("select");
+            const unitName = select.options[select.selectedIndex].text;
+            const qty = product.querySelector(".qty-input").value;
+            const total = product.querySelector(".price").innerText;
+
+            alert(`🛒 Đã thêm:
+${name}
+${unitName}
+Số lượng: ${qty}
+Thành tiền: ${total} đ`);
+        }
+    </script>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>
