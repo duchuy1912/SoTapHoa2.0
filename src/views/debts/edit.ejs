@@ -1,0 +1,110 @@
+<style>
+    body{
+  font-family: Arial, sans-serif;
+  background:#f3f4f6;
+  margin: 0;
+}
+
+.edit-box{
+  max-width:420px;
+  background:#fff;
+  padding:25px 30px;
+  border-radius:12px;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+
+h2{
+  margin-bottom:20px;
+  color:#111827;
+}
+
+.form-group{
+  margin-bottom:14px;
+}
+
+label{
+  font-weight:600;
+  display:block;
+  margin-bottom:6px;
+}
+
+input, textarea{
+  width:100%;
+  padding:9px 12px;
+  border:1px solid #d1d5db;
+  border-radius:6px;
+  font-size:14px;
+}
+
+input:focus, textarea:focus{
+  outline:none;
+  border-color:#2563eb;
+  box-shadow:0 0 0 2px rgba(37,99,235,.15);
+}
+
+.preview-img{
+  width:120px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  margin-bottom:8px;
+}
+
+.btn-update{
+  width:100%;
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.btn-update:hover{ background:#1d4ed8; }
+
+</style>
+<%- include('../partials/navbar') %>
+
+<div class="edit-box">
+  <h2>✏️ Cập nhật ghi nợ</h2>
+
+  <form method="POST" action="/debts/edit/<%= debt.id %>" enctype="multipart/form-data">
+
+    <div class="form-group">
+      <label>Tên khách</label>
+      <input name="customer_name" value="<%= debt.customer_name %>">
+    </div>
+
+    <div class="form-group">
+      <label>SĐT</label>
+      <input name="phone" value="<%= debt.phone %>">
+    </div>
+
+    <div class="form-group">
+      <label>Số tiền</label>
+      <input name="total_money" value="<%= debt.total_money %>">
+    </div>
+
+    <div class="form-group">
+      <label>Ghi chú</label>
+      <textarea name="note"><%= debt.note %></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Ảnh hiện tại</label><br>
+      <% if(debt.image_url){ %>
+        <img src="<%= debt.image_url %>" class="preview-img">
+      <% } %>
+    </div>
+
+    <input type="hidden" name="old_image" value="<%= debt.image_url %>">
+
+    <div class="form-group">
+      <label>Đổi ảnh mới</label>
+      <input type="file" name="image">
+    </div>
+
+    <button class="btn-update">💾 Cập nhật</button>
+  </form>
+</div>
+
