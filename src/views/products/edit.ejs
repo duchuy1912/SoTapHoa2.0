@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Sửa sản phẩm</title>
@@ -16,7 +17,7 @@
       margin: auto;
       padding: 25px 30px;
       border-radius: 10px;
-      box-shadow: 0 8px 20px rgba(0,0,0,.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, .1);
     }
 
     h2 {
@@ -63,7 +64,9 @@
       color: #fff;
     }
 
-    .btn-save:hover { background: #16a34a; }
+    .btn-save:hover {
+      background: #16a34a;
+    }
 
     .btn-back {
       background: #6b7280;
@@ -72,43 +75,89 @@
       text-decoration: none;
     }
 
-    .btn-back:hover { background: #4b5563; }
+    .btn-back:hover {
+      background: #4b5563;
+    }
+
+    .btn-add {
+      background: #3b82f6;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .btn-add:hover {
+      background: #2563eb;
+    }
+
+    .btn-remove {
+      background: #ef4444;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0 10px;
+      cursor: pointer;
+    }
+
+    .btn-remove:hover {
+      background: #dc2626;
+    }
   </style>
 </head>
+
 <body>
 
-<div class="container">
-  <h2>✏️ Sửa sản phẩm</h2>
+  <div class="container">
+    <h2>✏️ Sửa sản phẩm</h2>
 
-  <form action="/products/edit/<%= product.id %>" method="POST" enctype="multipart/form-data">
+    <form action="/products/edit/<%= product.id %>" method="POST" enctype="multipart/form-data">
 
-    <label>Tên sản phẩm</label>
-    <input name="name" value="<%= product.name %>" required>
+      <label>Tên sản phẩm</label>
+      <input name="name" value="<%= product.name %>" required>
 
-    <label>Barcode</label>
-    <input name="barcode" value="<%= product.barcode %>">
+      <label>Barcode</label>
+      <input name="barcode" value="<%= product.barcode %>">
 
-    <label>Đổi hình ảnh (nếu cần)</label>
-    <input type="file" name="image">
-    <input type="hidden" name="old_image" value="<%= product.image_url %>">
+      <label>Đổi hình ảnh (nếu cần)</label>
+      <input type="file" name="image">
+      <input type="hidden" name="old_image" value="<%= product.image_url %>">
 
-    <hr style="margin:18px 0">
+      <hr style="margin:18px 0">
 
-    <h3>Đơn vị bán</h3>
+      <h3>Đơn vị bán</h3>
 
-    <% product.units.forEach(unit => { %>
-      <div class="unit-row">
-        <input type="hidden" name="unit_id[]" value="<%= unit.id %>">
-        <input name="unit_name[]" value="<%= unit.unit_name %>" placeholder="Hộp / Lốc / Thùng">
-        <input name="price_sell[]" value="<%= unit.price_sell %>" placeholder="Giá">
-      </div>
-    <% }) %>
 
-    <button class="btn btn-save">💾 Cập nhật</button>
-    <a href="/" class="btn btn-back">↩ Quay lại</a>
+      <% product.units.forEach(unit=> { %>
+        <div class="unit-row">
+          <input type="hidden" name="unit_id[]" value="<%= unit.id %>">
+          <input name="unit_name[]" value="<%= unit.unit_name %>" placeholder="Hộp / Lốc / Thùng">
+          <input name="price_sell[]" value="<%= unit.price_sell %>" placeholder="Giá">
+          <button type="button" class="btn-remove" onclick="removeUnit(this)">✖</button>
+        </div>
+        <% }) %>
+          <button type="button" class="btn btn-add" onclick="addUnit()">➕ Thêm đơn vị</button> <br>
+          <button class="btn btn-save">💾 Cập nhật</button>
+          <a href="/" class="btn btn-back">↩ Quay lại</a>
 
-  </form>
-</div>
+    </form>
+  </div>
+  <script>
+    function addUnit() {
+      const div = document.createElement("div");
+      div.className = "unit-row";
+      div.innerHTML = `
+    <input type="hidden" name="unit_id[]" value="">
+    <input name="unit_name[]" placeholder="Hộp / Lốc / Thùng">
+    <input name="price_sell[]" placeholder="Giá">
+    <button type="button" class="btn-remove" onclick="removeUnit(this)">✖</button>
+  `;
+      document.querySelector(".container").querySelector("h3").after(div);
+    }
+
+    function removeUnit(btn) {
+      btn.parentElement.remove();
+    }
+  </script>
 
 </body>
+
 </html>

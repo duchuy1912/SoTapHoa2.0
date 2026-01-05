@@ -51,18 +51,35 @@ exports.showEditForm = async (req, res) => {
 
 // xử lý cập nhật
 exports.updateProduct = async (req, res) => {
-  const { name, barcode, unit_id, unit_name, price_sell } = req.body;
   const id = req.params.id;
+  const { name, barcode, unit_id = [], unit_name = [], price_sell = [] } = req.body;
 
   let image_url = req.body.old_image;
   if (req.file) image_url = "/uploads/products/" + req.file.filename;
 
+  // 1️⃣ Update product
   await Product.updateProduct(id, name, barcode, image_url);
 
-  for (let i = 0; i < unit_id.length; i++) {
-    await Product.updateUnit(unit_id[i], unit_name[i], price_sell[i]);
+  const keepUnitIds = [];
+
+  for (let i = 0; i < unit_name.length; i++) {
+    if (unit_id[i]) {
+      // UPDATE unit cũ
+      await Product.updateUnit(unit_id[i], unit_name[i], price_sell[i]);
+      keepUnitIds.push(unit_id[i]);
+    } else {
+      // INSERT unit mới
+      const newId = await Product.createUnit({
+        product_id: id,
+        unit_name: unit_name[i],
+        price_sell: price_sell[i]
+      });
+      keepUnitIds.push(newId);
+    }
   }
 
-  // 👇 QUAY LẠI TRANG DANH SÁCH SẢN PHẨM
-  res.redirect("/");
+  // 2️⃣ Xoá các unit đã bị remove khỏi form
+  await Product.deleteUnitsNotIn(id, keepUnitIds);
+
+  res.redirect("/products");
 };

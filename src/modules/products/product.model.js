@@ -31,13 +31,15 @@ exports.createProduct = async ({ name, barcode, image_url }) => {
   return result.rows[0].id;
 };
 
-exports.createUnit = async ({ product_id, unit_name, price_sell }) => {
-  await db.query(
+exports.createUnit = async (data) => {
+  const rs = await db.query(
     `INSERT INTO product_units(product_id, unit_name, price_sell)
-     VALUES ($1,$2,$3)`,
-    [product_id, unit_name, price_sell]
+     VALUES($1,$2,$3) RETURNING id`,
+    [data.product_id, data.unit_name, data.price_sell]
   );
+  return rs.rows[0].id;
 };
+
 // exports.delete = async (id) => {
 //     await db.query(`DELETE FROM product_units WHERE product_id = $1`, [id]);
 //     await db.query(`DELETE FROM products WHERE id = $1`, [id]);
@@ -77,4 +79,15 @@ exports.updateUnit = async (id, unit_name, price_sell) => {
      WHERE id=$3`,
     [unit_name, price_sell, id]
   );
+};
+exports.deleteUnitsNotIn = async (product_id, keepIds) => {
+  if (keepIds.length === 0) {
+    await db.query("DELETE FROM product_units WHERE product_id=$1", [product_id]);
+  } else {
+    await db.query(
+      `DELETE FROM product_units 
+       WHERE product_id=$1 AND id NOT IN (${keepIds.join(",")})`,
+      [product_id]
+    );
+  }
 };
