@@ -74,4 +74,13 @@ CREATE TABLE product_units (
     ON DELETE CASCADE
 );
 
-
+### BẢNG 4: debts (Nợ)
+CREATE TABLE debts (
+  id SERIAL PRIMARY KEY,
+  customer_name VARCHAR(150),
+  phone VARCHAR(20),
+  total_money NUMERIC,
+  note TEXT,
+  image_url TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
