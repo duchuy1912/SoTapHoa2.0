@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Danh sách sản phẩm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -178,6 +180,70 @@
 
         .btn-cart:hover {
             background: #16a34a;
+        }
+
+        @media (max-width: 768px) {
+
+            .navbar {
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 10px 14px;
+            }
+
+            .navbar a {
+                flex: 1 1 45%;
+                text-align: center;
+                font-size: 14px;
+                padding: 8px 0;
+            }
+
+            #searchInput {
+                width: calc(100% - 30px);
+                margin: 16px 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+                margin-left: 15px;
+            }
+
+            .product-list {
+                padding: 0 12px 20px;
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 12px;
+            }
+
+            .product {
+                padding: 10px;
+                border-radius: 10px;
+            }
+
+            .product img {
+                height: 120px;
+            }
+
+            .product h3 {
+                font-size: 14px;
+            }
+
+            .price {
+                font-size: 16px;
+            }
+
+            .cart-box {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .qty-input {
+                /* width: 100%; */
+            }
+
+            .btn-cart {
+                width: 100%;
+                margin-left: 0;
+                padding: 10px 0;
+            }
         }
     </style>
 
