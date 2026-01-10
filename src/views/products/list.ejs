@@ -4,167 +4,182 @@
 <head>
     <meta charset="UTF-8">
     <title>Danh sách sản phẩm</title>
-<style>
-body{
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background:#f3f4f6;
-  margin:0;
-}
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+        }
 
-/* ===== NAVBAR ===== */
-.navbar{
-  background:#111827;
-  padding:14px 40px;
-  display:flex;
-  gap:24px;
-  position:sticky;
-  top:0;
-  z-index:1000;
-  box-shadow:0 2px 10px rgba(0,0,0,.15);
-}
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: #111827;
+            padding: 14px 40px;
+            display: flex;
+            gap: 24px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .15);
+        }
 
-.navbar a{
-  color:#e5e7eb;
-  text-decoration:none;
-  font-weight:600;
-  padding:6px 12px;
-  border-radius:6px;
-  transition:.2s;
-}
-.navbar a:hover{
-  background:#2563eb;
-  color:#fff;
-}
+        .navbar a {
+            color: #e5e7eb;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: .2s;
+        }
 
-/* ===== SEARCH ===== */
-#searchInput{
-  margin:25px 40px 15px;
-  padding:12px 14px;
-  width:320px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-  outline:none;
-}
-#searchInput:focus{
-  border-color:#2563eb;
-  box-shadow:0 0 0 2px rgba(37,99,235,.2);
-}
+        .navbar a:hover {
+            background: #2563eb;
+            color: #fff;
+        }
 
-/* ===== PRODUCT GRID ===== */
-.product-list{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
-  gap:22px;
-  padding:0 40px 40px;
-}
+        /* ===== SEARCH ===== */
+        #searchInput {
+            margin: 25px 40px 15px;
+            padding: 12px 14px;
+            width: 320px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            outline: none;
+        }
 
-/* ===== PRODUCT CARD ===== */
-.product{
-  background:#fff;
-  border-radius:14px;
-  box-shadow:0 4px 14px rgba(0,0,0,.08);
-  padding:14px;
-  transition:.2s;
-}
-.product:hover{
-  transform:translateY(-4px);
-  box-shadow:0 10px 22px rgba(0,0,0,.15);
-}
+        #searchInput:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, .2);
+        }
 
-.product img{
-  width:100%;
-  height:170px;
-  object-fit:cover;
-  border-radius:10px;
-  margin-bottom:8px;
-}
+        /* ===== PRODUCT GRID ===== */
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 22px;
+            padding: 0 40px 40px;
+        }
 
-.product h3{
-  font-size:16px;
-  margin:6px 0;
-}
+        /* ===== PRODUCT CARD ===== */
+        .product {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
+            padding: 14px;
+            transition: .2s;
+        }
 
-/* ===== PRICE ===== */
-.price{
-  color:#dc2626;
-  font-size:18px;
-  font-weight:700;
-}
+        .product:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, .15);
+        }
 
-/* ===== UNIT SELECT ===== */
-.product select{
-  width:100%;
-  padding:6px 8px;
-  border-radius:6px;
-  border:1px solid #d1d5db;
-  margin:6px 0;
-}
+        .product img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
 
-/* ===== ACTION ===== */
-.action-buttons{
-  display:flex;
-  gap:8px;
-  margin:8px 0;
-}
+        .product h3 {
+            font-size: 16px;
+            margin: 6px 0;
+        }
 
-.btn-edit{
-  background:#2563eb;
-  color:#fff;
-  padding:6px 10px;
-  border-radius:6px;
-  font-size:13px;
-  text-decoration:none;
-}
-.btn-edit:hover{background:#1d4ed8;}
+        /* ===== PRICE ===== */
+        .price {
+            color: #dc2626;
+            font-size: 18px;
+            font-weight: 700;
+        }
 
-.btn-delete{
-  background:#dc2626;
-  color:#fff;
-  padding:6px 10px;
-  border-radius:6px;
-  border:none;
-  cursor:pointer;
-}
-.btn-delete:hover{background:#b91c1c;}
+        /* ===== UNIT SELECT ===== */
+        .product select {
+            width: 100%;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            margin: 6px 0;
+        }
 
-/* ===== CART BOX ===== */
-.cart-box{
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
+        /* ===== ACTION ===== */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+        }
 
-.qty-btn{
-  width:30px;
-  height:30px;
-  border:none;
-  background:#e5e7eb;
-  border-radius:6px;
-  font-size:18px;
-  cursor:pointer;
-}
-.qty-btn:hover{background:#d1d5db;}
+        .btn-edit {
+            background: #2563eb;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-decoration: none;
+        }
 
-.qty-input{
-  width:40px;
-  text-align:center;
-  border:1px solid #d1d5db;
-  border-radius:6px;
-  height:30px;
-}
+        .btn-edit:hover {
+            background: #1d4ed8;
+        }
 
-.btn-cart{
-  margin-left:auto;
-  background:#22c55e;
-  color:#fff;
-  border:none;
-  padding:6px 12px;
-  border-radius:8px;
-  font-size:16px;
-  cursor:pointer;
-}
-.btn-cart:hover{background:#16a34a;}
-</style>
+        .btn-delete {
+            background: #dc2626;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-delete:hover {
+            background: #b91c1c;
+        }
+
+        /* ===== CART BOX ===== */
+        .cart-box {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: #e5e7eb;
+            border-radius: 6px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .qty-btn:hover {
+            background: #d1d5db;
+        }
+
+        .qty-input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            height: 30px;
+        }
+
+        .btn-cart {
+            margin-left: auto;
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn-cart:hover {
+            background: #16a34a;
+        }
+    </style>
 
 </head>
 
@@ -178,9 +193,8 @@ body{
         <a href="/debts">📒 Ghi nợ</a>
     </div> -->
 
-        <input type="text" id="searchInput" placeholder="🔍 Tìm theo tên hoặc barcode..."
-            style="padding:10px; width:300px; margin-bottom:20px;    margin-left: 40px;" onkeyup="searchProduct()" />
-
+        <input type="text" id="searchInput" placeholder="🔍 Nhấn / để tìm nhanh..."
+            style="padding:10px; width:300px; margin-bottom:20px; margin-left:40px;" onkeyup="searchProduct()">
 
         <hr>
 
@@ -241,13 +255,7 @@ body{
 
 
 
-        <!-- <script>
-        function changePrice(select) {
-            const price = select.value;
-            const priceSpan = select.parentElement.querySelector(".price");
-            priceSpan.innerText = Number(price).toLocaleString();
-        }
-    </script> -->
+
         <script>
             function changePrice(select) {
                 const product = select.closest(".product");
@@ -317,6 +325,22 @@ body{
                 });
             };
         </script>
+        <script>
+            document.addEventListener("keydown", function (e) {
+
+                // Nếu đang gõ trong input khác thì bỏ qua
+                if (document.activeElement.tagName === "INPUT" ||
+                    document.activeElement.tagName === "TEXTAREA") return;
+
+                if (e.key === "`" || e.key === "/") {
+                    e.preventDefault(); // không cho gõ dấu /
+                    const input = document.getElementById("searchInput");
+                    input.focus();
+                    input.select();
+                }
+            });
+        </script>
+
         <script>
             function addToCart(btn) {
                 const product = btn.closest(".product");
