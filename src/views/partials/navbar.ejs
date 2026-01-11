@@ -5,7 +5,12 @@
   display:flex;
   gap:20px;
 }
-
+/* .menu-btn {
+            font-size: 22px;
+            color: #fff;
+            cursor: pointer;
+            display: none;
+        } */
 .navbar a{
   color:#ddd;
   text-decoration:none;
@@ -20,9 +25,19 @@
 }
 
 </style>
-<div class="navbar">
+<!-- <div class="navbar">
   <a href="/">🏠 Sản phẩm</a>
   <a href="/products/create">➕ Thêm sản phẩm</a>
-  <!-- <a href="/categories">📂 Loại hàng</a> -->
   <a href="/debts">📒 Sổ ghi nợ</a>
+</div> -->
+<div class="navbar">
+  <div class="nav-left">
+    <span class="menu-btn" onclick="toggleMenu()">☰</span>
+  </div>
+
+  <div class="nav-links" id="navLinks">
+    <a href="/">🏠 Sản phẩm</a>
+    <a href="/products/create">➕ Thêm hàng</a>
+    <a href="/debts">📒 Ghi nợ</a>
+  </div>
 </div>
