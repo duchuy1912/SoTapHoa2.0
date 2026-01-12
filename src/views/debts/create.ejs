@@ -1,168 +1,175 @@
 <style>
-body{
-  font-family: Arial, sans-serif;
-  background:#f3f4f6;
-  margin:0;
-}
+  body {
+    font-family: Arial, sans-serif;
+    background: #f3f4f6;
+    margin: 0;
+  }
 
-.form-box{
-  max-width:420px;
-  background:#fff;
-  padding:25px 30px;
-  border-radius:12px;
-  box-shadow:0 10px 25px rgba(0,0,0,.1);
-}
+  .form-box {
+    max-width: 420px;
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .1);
+  }
 
-.form-group{
-  margin-bottom:14px;
-}
+  .form-group {
+    margin-bottom: 14px;
+  }
 
-label{
-  font-weight:600;
-  display:block;
-  margin-bottom:6px;
-  color:#111827;
-}
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+    color: #111827;
+  }
 
-input, textarea{
-  width:100%;
-  padding:9px 12px;
-  border:1px solid #d1d5db;
-  border-radius:6px;
-  font-size:14px;
-}
+  input,
+  textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+  }
 
-input:focus, textarea:focus{
-  outline:none;
-  border-color:#2563eb;
-  box-shadow:0 0 0 2px rgba(37,99,235,.15);
-}
+  input:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, .15);
+  }
 
-/* autocomplete */
-#customer_name{
-  font-weight:600;
-}
+  /* autocomplete */
+  #customer_name {
+    font-weight: 600;
+  }
 
-#suggestBox{
-  position:absolute;
-  background:#fff;
-  width:100%;
-  max-height:220px;
-  overflow-y:auto;
-  border-radius:8px;
-  box-shadow:0 10px 18px rgba(0,0,0,.2);
-  z-index:1000;
-}
+  #suggestBox {
+    position: absolute;
+    background: #fff;
+    width: 100%;
+    max-height: 220px;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 10px 18px rgba(0, 0, 0, .2);
+    z-index: 1000;
+  }
 
-#suggestBox div{
-  padding:10px 14px;
-  border-bottom:1px solid #eee;
-  cursor:pointer;
-  transition:.15s;
-}
+  #suggestBox div {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: .15s;
+  }
 
-#suggestBox div:hover{
-  background:#2563eb;
-  color:#fff;
-}
+  #suggestBox div:hover {
+    background: #2563eb;
+    color: #fff;
+  }
 
-#oldImage{
-  border-radius:8px;
-  border:1px solid #ddd;
-}
+  #oldImage {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
 
-/* button */
-.btn-save{
-  background:#22c55e;
-  color:#fff;
-  border:none;
-  padding:10px 16px;
-  border-radius:8px;
-  font-weight:bold;
-  cursor:pointer;
-  width:100%;
-}
+  /* button */
+  .btn-save {
+    background: #22c55e;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+  }
 
-.btn-save:hover{ background:#16a34a; }
-/* NAVBAR */
+  .btn-save:hover {
+    background: #16a34a;
+  }
 
-
+  /* NAVBAR */
 </style>
 <%- include('../partials/navbar') %>
 
-<div class="form-box">
-<form method="POST" action="/debts/create" enctype="multipart/form-data">
+  <div class="form-box">
+    <form method="POST" action="/debts/create" enctype="multipart/form-data">
 
-  <div class="form-group">
-    <label>Tên khách</label>
-    <div style="position:relative">
-      <input type="text" id="customer_name" name="customer_name" autocomplete="off">
-      <div id="suggestBox" style="display:none;"></div>
-    </div>
+      <div class="form-group">
+        <label>Tên khách</label>
+        <div style="position:relative">
+          <input type="text" id="customer_name" name="customer_name" autocomplete="off">
+          <div id="suggestBox" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>SĐT</label>
+        <input id="phone" name="phone">
+      </div>
+
+      <div class="form-group">
+        <label>Số tiền</label>
+        <input name="total_money">
+      </div>
+
+      <div class="form-group">
+        <label>Ghi chú</label>
+        <textarea name="note"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Ảnh cũ khách</label>
+        <img id="oldImage" width="120">
+        <input type="hidden" id="old_image" name="old_image">
+      </div>
+
+
+      <div class="form-group">
+        <label>Ảnh mới</label>
+        <input type="file" name="image">
+      </div>
+
+      <button class="btn-save">💾 Lưu ghi nợ</button>
+    </form>
   </div>
 
-  <div class="form-group">
-    <label>SĐT</label>
-    <input id="phone" name="phone">
-  </div>
-
-  <div class="form-group">
-    <label>Số tiền</label>
-    <input name="total_money">
-  </div>
-
-  <div class="form-group">
-    <label>Ghi chú</label>
-    <textarea name="note"></textarea>
-  </div>
-
-  <div class="form-group">
-    <label>Ảnh cũ khách</label>
-    <img id="oldImage" width="120">
-  </div>
-
-  <div class="form-group">
-    <label>Ảnh mới</label>
-    <input type="file" name="image">
-  </div>
-
-  <button class="btn-save">💾 Lưu ghi nợ</button>
-</form>
-</div>
-
-<script>
+  <script>
     const input = document.getElementById("customer_name");
     const box = document.getElementById("suggestBox");
 
     input.addEventListener("input", async () => {
-        const q = input.value.trim();
-        if (!q) {
-            box.style.display = "none";
-            return;
-        }
+      const q = input.value.trim();
+      if (!q) {
+        box.style.display = "none";
+        return;
+      }
 
-        const res = await fetch(`/debts/search-customer?q=${q}`);
-        const data = await res.json();
+      const res = await fetch(`/debts/search-customer?q=${q}`);
+      const data = await res.json();
 
-        box.innerHTML = "";
-        data.forEach(c => {
-            const div = document.createElement("div");
-            div.innerHTML = `
+      box.innerHTML = "";
+      data.forEach(c => {
+        const div = document.createElement("div");
+        div.innerHTML = `
       <strong>${c.customer_name}</strong> - ${c.phone || ""}
     `;
-            div.style.padding = "6px";
-            div.style.cursor = "pointer";
+        div.style.padding = "6px";
+        div.style.cursor = "pointer";
 
-            div.onclick = () => {
-                input.value = c.customer_name;
-                document.getElementById("phone").value = c.phone || "";
-                document.getElementById("oldImage").src = c.image_url || "";
-                box.style.display = "none";
-            };
+        div.onclick = () => {
+          input.value = c.customer_name;
+          document.getElementById("phone").value = c.phone || "";
+          document.getElementById("oldImage").src = c.image_url || "";
+          document.getElementById("old_image").value = c.image_url || ""; // ⭐ CỰC QUAN TRỌNG
+          box.style.display = "none";
+        };
 
-            box.appendChild(div);
-        });
 
-        box.style.display = "block";
+        box.appendChild(div);
+      });
+
+      box.style.display = "block";
     });
-</script>
+  </script>

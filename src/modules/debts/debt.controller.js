@@ -12,7 +12,11 @@ exports.showCreateForm = (req, res) => {
 exports.createDebt = async (req, res) => {
   const { customer_name, phone, total_money, note } = req.body;
 
-  const image_url = req.file ? "/uploads/debts/" + req.file.filename : null;
+  // const image_url = req.file ? "/uploads/debts/" + req.file.filename : null;
+  const image_url = req.file
+  ? `/uploads/debts/${req.file.filename}`
+  : req.body.old_image || null;
+
 
   await Debt.create({ customer_name, phone, total_money, note, image_url });
   res.redirect("/debts");
