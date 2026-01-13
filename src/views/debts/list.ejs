@@ -1,152 +1,177 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Sổ ghi nợ</title>
   <style>
     body {
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: #f3f4f6;
-  margin: 0;
-}
-.menu-btn {
-            font-size: 22px;
-            color: #fff;
-            cursor: pointer;
-            display: none;
-        }  
-h2 {
-  margin: 20px;
-}
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+    }
 
-.btn {
-  padding: 7px 14px;
-  border-radius: 6px;
-  color: #fff;
-  text-decoration: none;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
-}
+    .menu-btn {
+      font-size: 22px;
+      color: #fff;
+      cursor: pointer;
+      display: none;
+    }
 
-.btn-add { background: #22c55e; margin-left:20px; }
-.btn-edit { background: #2563eb; }
-.btn-del  { background: #dc2626; }
+    h2 {
+      margin: 20px;
+    }
 
-.btn:hover { opacity: 0.85; }
+    .btn {
+      padding: 7px 14px;
+      border-radius: 6px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+    }
 
-table {
-  width: calc(100% - 40px);
-  margin: 20px;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0,0,0,.08);
-}
+    .btn-add {
+      background: #22c55e;
+      margin-left: 20px;
+    }
 
-th {
-  background: #111827;
-  color: #fff;
-  padding: 12px;
-  font-size: 14px;
-}
+    .btn-edit {
+      background: #2563eb;
+    }
 
-td {
-  border-bottom: 1px solid #eee;
-  padding: 10px 12px;
-  font-size: 14px;
-}
+    .btn-del {
+      background: #dc2626;
+    }
 
-tr:hover { background: #f9fafb; }
+    .btn:hover {
+      opacity: 0.85;
+    }
 
-.thumb {
-  /* width: 70px; */
-  height: 70px;
-  object-fit: cover;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: .2s;
-}
+    table {
+      width: calc(100% - 40px);
+      margin: 20px;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, .08);
+    }
 
-.thumb:hover { transform: scale(1.05); }
+    th {
+      background: #111827;
+      color: #fff;
+      padding: 12px;
+      font-size: 14px;
+    }
 
-/* Preview full màn hình */
-#previewBox {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.85);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
+    td {
+      border-bottom: 1px solid #eee;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
 
-#previewBox img {
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 10px;
-  box-shadow: 0 0 30px rgba(0,0,0,.5);
-}
+    tr:hover {
+      background: #f9fafb;
+    }
 
+    .thumb {
+      /* width: 70px; */
+      height: 70px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: .2s;
+    }
 
+    .thumb:hover {
+      transform: scale(1.05);
+    }
 
+    /* Preview full màn hình */
+    #previewBox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #previewBox img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+    }
   </style>
 </head>
+
 <body>
-<%- include('../partials/navbar') %>
+  <%- include('../partials/navbar') %>
 
-<h2>📒 Sổ ghi nợ</h2>
-<a class="btn btn-add" href="/debts/create">➕ Thêm ghi nợ</a>
-<br><br>
+    <h2>📒 Sổ ghi nợ</h2>
+    <a class="btn btn-add" href="/debts/create">➕ Thêm ghi nợ</a>
+    <br><br>
 
-<table>
-<tr>
-  <th>Ảnh</th>
-  <th>Tên khách</th>
-  <th>SĐT</th>
-  <th>Số tiền</th>
-  <th>Ghi chú</th>
-  <th>Ngày</th>
-  <th>Hành động</th>
-</tr>
+    <table>
+      <tr>
+        <th>Ảnh</th>
+        <th>Tên khách</th>
+        <th>SĐT</th>
+        <th>Số tiền</th>
+        <th>Ghi chú</th>
+        <th>Ngày</th>
+        <th>Hành động</th>
+      </tr>
 
-<% debts.forEach(d => { %>
-<tr>
-  <td>
-    <% if(d.image_url){ %>
-      <img src="<%= d.image_url %>" class="thumb" onclick="openPreview('<%= d.image_url %>')">
+      <% debts.forEach(d=> { %>
+        <tr>
+          <td>
+            <% if(d.image_url){ %>
+              <img src="<%= d.image_url %>" class="thumb" onclick="openPreview('<%= d.image_url %>')">
 
-    <% } %>
-  </td>
-  <td><%= d.customer_name %></td>
-  <td><%= d.phone %></td>
-  <td style="color:red;font-weight:bold">
-    <%= Number(d.total_money).toLocaleString() %> đ
-  </td>
-  <td><%= d.note %></td>
-  <td><%= new Date(d.created_at).toLocaleDateString() %></td>
-  <td>
-    <a class="btn btn-edit" href="/debts/edit/<%= d.id %>">✏️</a>
-    <form method="POST" action="/debts/delete/<%= d.id %>" style="display:inline">
-      <button class="btn btn-del">🗑</button>
-    </form>
-  </td>
-</tr>
-<% }) %>
+              <% } %>
+          </td>
+          <td>
+            <%= d.customer_name %>
+          </td>
+          <td>
+            <%= d.phone %>
+          </td>
+          <td style="color:red;font-weight:bold">
+            <%= Number(d.total_money).toLocaleString() %> đ
+          </td>
+          <td>
+            <%= d.note %>
+          </td>
+          <td>
+            <%= new Date(d.created_at).toLocaleDateString() %>
+          </td>
+          <td>
+            <a class="btn btn-edit" href="/debts/edit/<%= d.id %>">✏️</a>
+            <form method="POST" action="/debts/delete/<%= d.id %>" style="display:inline">
+              <button class="btn btn-del">🗑</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
 
-</table>
-<script>
-function openPreview(src){
-  document.getElementById("previewImg").src = src;
-  document.getElementById("previewBox").style.display = "flex";
-}
-function closePreview(){
-  document.getElementById("previewBox").style.display = "none";
-}
-</script>
-<div id="previewBox" onclick="closePreview()">
-  <img id="previewImg">
-</div>
+    </table>
+    <script>
+      function openPreview(src) {
+        document.getElementById("previewImg").src = src;
+        document.getElementById("previewBox").style.display = "flex";
+      }
+      function closePreview() {
+        document.getElementById("previewBox").style.display = "none";
+      }
+    </script>
+    <div id="previewBox" onclick="closePreview()">
+      <img id="previewImg">
+    </div>
 </body>
+
 </html>
