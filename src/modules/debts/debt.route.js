@@ -12,10 +12,6 @@ router.post("/edit/:id", upload.single("image"), controller.updateDebt);
 
 router.post("/delete/:id", controller.deleteDebt);
 
-// ❌ SAI
-// router.get("/search-customer", debtController.searchCustomer);
-
-// ✅ ĐÚNG
 router.get("/search-customer", controller.searchCustomer);
 
 module.exports = router;
