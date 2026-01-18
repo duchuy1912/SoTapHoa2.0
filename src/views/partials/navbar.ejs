@@ -1,29 +1,77 @@
 <style>
-    .navbar{
-  background:#222;
-  padding:12px 30px;
-  display:flex;
-  gap:20px;
-}
-/* .menu-btn {
-            font-size: 22px;
-            color: #fff;
-            cursor: pointer;
-            display: none;
-        } */
-.navbar a{
-  color:#ddd;
-  text-decoration:none;
-  font-weight:600;
-  padding:6px 12px;
-  border-radius:4px;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-.navbar a:hover{
-  background:#ff9800;
-  color:#000;
-}
+  .navbar {
+    background: linear-gradient(90deg, #1f2933, #111827);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
 
+  .logo {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 16px;
+  }
+
+  .nav-links a {
+    color: #e5e7eb;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: all 0.25s ease;
+  }
+
+  .nav-links a:hover {
+    background: #f59e0b;
+    color: #111;
+    transform: translateY(-2px);
+  }
+
+  /* Nút menu mobile */
+  .menu-btn {
+    font-size: 24px;
+    cursor: pointer;
+    display: none;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 768px) {
+    .menu-btn {
+      display: block;
+    }
+
+    .nav-links {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: #111827;
+      flex-direction: column;
+      width: 200px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .nav-links a {
+      padding: 10px;
+    }
+
+    .nav-links.show {
+      display: flex;
+    }
+  }
 </style>
 <!-- <div class="navbar">
   <a href="/">🏠 Sản phẩm</a>
@@ -31,9 +79,11 @@
   <a href="/debts">📒 Sổ ghi nợ</a>
 </div> -->
 <div class="navbar">
-  <div class="nav-left">
-    <span class="menu-btn" onclick="toggleMenu()">☰</span>
+  <div class="logo">
+    🛒 Quản lý
   </div>
+
+  <span class="menu-btn" onclick="toggleMenu()">☰</span>
 
   <div class="nav-links" id="navLinks">
     <a href="/">🏠 Sản phẩm</a>
