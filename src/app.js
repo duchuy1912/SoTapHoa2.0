@@ -29,6 +29,6 @@ app.use("/debts", debtRoute);
 // app.listen(3000, () => {
 //   console.log("Server chạy tại http://localhost:3000");
 // });
-app.listen(3000, '192.168.1.3', () => {
-  console.log("Server chạy tại http://192.168.1.3:3000");
+app.listen(3000, '192.168.1.4', () => {
+  console.log("Server chạy tại http://192.168.1.4:3000");
 });
