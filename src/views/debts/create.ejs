@@ -1,175 +1,676 @@
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f3f4f6;
-    margin: 0;
-  }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thêm ghi nợ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
 
-  .form-box {
-    max-width: 420px;
-    background: #fff;
-    padding: 25px 30px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, .1);
-  }
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --surface3: #2a2f45;
+      --border: rgba(255,255,255,0.07);
+      --border-focus: rgba(79,140,255,0.5);
+      --accent: #4f8cff;
+      --accent2: #38e8b5;
+      --danger: #ff5757;
+      --text: #e8eaf6;
+      --muted: #7b82a0;
+    }
 
-  .form-group {
-    margin-bottom: 14px;
-  }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  label {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 6px;
-    color: #111827;
-  }
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-  input,
-  textarea {
-    width: 100%;
-    padding: 9px 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 14px;
-  }
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: rgba(26,29,39,0.92);
+      backdrop-filter: blur(14px);
+      padding: 0 36px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border);
+    }
 
-  input:focus,
-  textarea:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, .15);
-  }
+    .nav-left { display: flex; align-items: center; gap: 8px; }
 
-  /* autocomplete */
-  #customer_name {
-    font-weight: 600;
-  }
+    .logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin-right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-  #suggestBox {
-    position: absolute;
-    background: #fff;
-    width: 100%;
-    max-height: 220px;
-    overflow-y: auto;
-    border-radius: 8px;
-    box-shadow: 0 10px 18px rgba(0, 0, 0, .2);
-    z-index: 1000;
-  }
+    .logo-dot { width: 8px; height: 8px; background: var(--accent2); border-radius: 50%; }
 
-  #suggestBox div {
-    padding: 10px 14px;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
-    transition: .15s;
-  }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
 
-  #suggestBox div:hover {
-    background: #2563eb;
-    color: #fff;
-  }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.88rem;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
 
-  #oldImage {
-    border-radius: 8px;
-    border: 1px solid #ddd;
-  }
+    .nav-links a:hover { background: var(--surface2); color: var(--text); }
+    .nav-links a.active { background: rgba(79,140,255,0.15); color: var(--accent); }
 
-  /* button */
-  .btn-save {
-    background: #22c55e;
-    color: #fff;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-  }
+    .menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 22px;
+      cursor: pointer;
+    }
 
-  .btn-save:hover {
-    background: #16a34a;
-  }
+    /* ===== PAGE ===== */
+    .page {
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px 60px;
+    }
 
-  /* NAVBAR */
-</style>
-<%- include('../partials/navbar') %>
+    .container {
+      width: 100%;
+      max-width: 500px;
+      animation: fade-up 0.4s ease both;
+    }
 
-  <div class="form-box">
-    <form method="POST" action="/debts/create" enctype="multipart/form-data">
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-      <div class="form-group">
-        <label>Tên khách</label>
-        <div style="position:relative">
-          <input type="text" id="customer_name" name="customer_name" autocomplete="off">
-          <div id="suggestBox" style="display:none;"></div>
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .breadcrumb a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--text); }
+    .breadcrumb span { color: var(--text); }
+
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 32px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-icon {
+      width: 44px; height: 44px;
+      background: rgba(56,232,181,0.1);
+      border: 1px solid rgba(56,232,181,0.25);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .card-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .card-subtitle { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+
+    /* Section */
+    .section { margin-bottom: 24px; }
+
+    .section-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Field */
+    .field { margin-bottom: 14px; }
+
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 7px;
+      letter-spacing: 0.04em;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(79,140,255,0.12);
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder { color: var(--muted); }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 88px;
+      line-height: 1.5;
+    }
+
+    /* Money prefix */
+    .input-wrap { position: relative; }
+
+    .input-wrap .prefix {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.82rem;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .input-wrap input { padding-left: 34px; }
+
+    /* ===== AUTOCOMPLETE ===== */
+    .autocomplete-wrap { position: relative; }
+
+    #suggestBox {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: var(--surface3);
+      border: 1px solid rgba(79,140,255,0.25);
+      border-radius: 12px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+      z-index: 1000;
+      overflow: hidden;
+      display: none;
+      animation: drop-in 0.18s ease both;
+    }
+
+    @keyframes drop-in {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .suggest-item {
+      padding: 10px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .suggest-item:last-child { border-bottom: none; }
+
+    .suggest-item:hover {
+      background: rgba(79,140,255,0.12);
+    }
+
+    .suggest-avatar {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .suggest-no-avatar {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .suggest-info { min-width: 0; }
+
+    .suggest-name {
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .suggest-phone {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    /* Filled customer indicator */
+    #customer-filled {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: rgba(56,232,181,0.07);
+      border: 1px solid rgba(56,232,181,0.2);
+      border-radius: 10px;
+      margin-top: 8px;
+    }
+
+    #customer-filled img {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+
+    #customer-filled-name {
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--accent2);
+    }
+
+    #customer-filled-phone {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    /* File input */
+    .file-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--surface2);
+      border: 1px dashed rgba(255,255,255,0.15);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      font-size: 0.88rem;
+      color: var(--muted);
+      position: relative;
+    }
+
+    .file-label:hover { border-color: var(--accent); color: var(--text); }
+
+    .file-label input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    #file-name { pointer-events: none; }
+    .file-chosen { color: var(--accent2); }
+
+    /* New image preview */
+    #new-img-preview {
+      display: none;
+      margin-top: 10px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    #new-img-preview img {
+      width: 100%;
+      max-height: 140px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Actions */
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-save {
+      flex: 1;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--accent2), #26c6a0);
+      color: #0f1117;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(56,232,181,0.22);
+    }
+
+    .btn-save:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(56,232,181,0.35);
+    }
+
+    .btn-save:active { transform: translateY(0); }
+
+    .btn-back {
+      padding: 13px 20px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--muted);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-back:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .navbar { padding: 0 16px; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px; left: 0; right: 0;
+        background: var(--surface);
+        flex-direction: column;
+        border-bottom: 1px solid var(--border);
+        padding: 8px 0;
+      }
+      .nav-links.show { display: flex; }
+      .nav-links a { border-radius: 0; padding: 12px 20px; }
+      .menu-btn { display: block; }
+
+      .card { padding: 20px 14px; }
+      .form-actions { flex-direction: column-reverse; }
+      .btn-back { justify-content: center; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      <div class="logo"><span class="logo-dot"></span> ShopPOS</div>
+      <div class="nav-links" id="navLinks">
+        <a href="/">🏠 Trang chủ</a>
+        <a href="/products">📦 Sản phẩm</a>
+        <a href="/orders">🧾 Đơn hàng</a>
+        <a href="/debts" class="active">📒 Sổ nợ</a>
+        <a href="/reports">📊 Báo cáo</a>
+        <a href="/settings">⚙️ Cài đặt</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="container">
+
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <a href="/">Trang chủ</a>
+        <span>›</span>
+        <a href="/debts">Sổ nợ</a>
+        <span>›</span>
+        <span>Thêm ghi nợ</span>
+      </div>
+
+      <div class="card">
+
+        <!-- Header -->
+        <div class="card-header">
+          <div class="card-icon">➕</div>
+          <div>
+            <div class="card-title">Thêm ghi nợ mới</div>
+            <div class="card-subtitle">Tìm khách cũ hoặc nhập khách mới</div>
+          </div>
         </div>
+
+        <form method="POST" action="/debts/create" enctype="multipart/form-data">
+
+          <!-- Thông tin khách -->
+          <div class="section">
+            <div class="section-title">Thông tin khách hàng</div>
+
+            <div class="field">
+              <label>Tên khách</label>
+              <div class="autocomplete-wrap">
+                <input type="text" id="customer_name" name="customer_name"
+                  placeholder="Nhập tên để tìm khách cũ…" autocomplete="off">
+                <div id="suggestBox"></div>
+              </div>
+
+              <!-- Hiển thị sau khi chọn từ gợi ý -->
+              <div id="customer-filled">
+                <img id="customer-filled-img" src="" alt="">
+                <div>
+                  <div id="customer-filled-name"></div>
+                  <div id="customer-filled-phone"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Số điện thoại</label>
+              <input type="text" id="phone" name="phone" placeholder="VD: 0901 234 567">
+            </div>
+          </div>
+
+          <!-- Khoản nợ -->
+          <div class="section">
+            <div class="section-title">Khoản nợ</div>
+
+            <div class="field">
+              <label>Số tiền nợ</label>
+              <div class="input-wrap">
+                <span class="prefix">₫</span>
+                <input type="number" name="total_money" placeholder="0">
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Ghi chú</label>
+              <textarea name="note" placeholder="Thêm ghi chú về khoản nợ…"></textarea>
+            </div>
+          </div>
+
+          <!-- Hình ảnh -->
+          <div class="section">
+            <div class="section-title">Hình ảnh</div>
+
+            <input type="hidden" id="old_image" name="old_image">
+
+            <div class="field">
+              <label>Ảnh khách hàng</label>
+              <label class="file-label">
+                <span>📁</span>
+                <span id="file-name">Chọn ảnh…</span>
+                <input type="file" name="image" accept="image/*" onchange="previewNewImage(this)">
+              </label>
+              <div id="new-img-preview">
+                <img id="new-img" src="" alt="preview">
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="form-actions">
+            <a href="/debts" class="btn-back">↩ Quay lại</a>
+            <button type="submit" class="btn-save">💾 Lưu ghi nợ</button>
+          </div>
+
+        </form>
       </div>
-
-      <div class="form-group">
-        <label>SĐT</label>
-        <input id="phone" name="phone">
-      </div>
-
-      <div class="form-group">
-        <label>Số tiền</label>
-        <input name="total_money">
-      </div>
-
-      <div class="form-group">
-        <label>Ghi chú</label>
-        <textarea name="note"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Ảnh cũ khách</label>
-        <img id="oldImage" width="120">
-        <input type="hidden" id="old_image" name="old_image">
-      </div>
-
-
-      <div class="form-group">
-        <label>Ảnh mới</label>
-        <input type="file" name="image">
-      </div>
-
-      <button class="btn-save">💾 Lưu ghi nợ</button>
-    </form>
+    </div>
   </div>
 
   <script>
-    const input = document.getElementById("customer_name");
-    const box = document.getElementById("suggestBox");
+    const nameInput  = document.getElementById("customer_name");
+    const phoneInput = document.getElementById("phone");
+    const suggestBox = document.getElementById("suggestBox");
+    const filledBox  = document.getElementById("customer-filled");
 
-    input.addEventListener("input", async () => {
-      const q = input.value.trim();
-      if (!q) {
-        box.style.display = "none";
-        return;
+    // ---- Autocomplete ----
+    nameInput.addEventListener("input", async () => {
+      const q = nameInput.value.trim();
+      if (!q) { suggestBox.style.display = "none"; return; }
+
+      try {
+        const res  = await fetch(`/debts/search-customer?q=${encodeURIComponent(q)}`);
+        const data = await res.json();
+
+        suggestBox.innerHTML = "";
+        if (!data.length) { suggestBox.style.display = "none"; return; }
+
+        data.forEach(c => {
+          const item = document.createElement("div");
+          item.className = "suggest-item";
+
+          const avatar = c.image_url
+            ? `<img src="${c.image_url}" class="suggest-avatar">`
+            : `<div class="suggest-no-avatar">👤</div>`;
+
+          item.innerHTML = `
+            ${avatar}
+            <div class="suggest-info">
+              <div class="suggest-name">${c.customer_name}</div>
+              <div class="suggest-phone">${c.phone || "Chưa có SĐT"}</div>
+            </div>
+          `;
+
+          item.addEventListener("click", () => {
+            nameInput.value  = c.customer_name;
+            phoneInput.value = c.phone || "";
+            document.getElementById("old_image").value = c.image_url || "";
+            suggestBox.style.display = "none";
+
+            // Hiển thị thẻ khách đã chọn
+            document.getElementById("customer-filled-name").textContent  = c.customer_name;
+            document.getElementById("customer-filled-phone").textContent = c.phone || "Chưa có SĐT";
+            const fi = document.getElementById("customer-filled-img");
+            if (c.image_url) {
+              fi.src = c.image_url;
+              fi.style.display = "block";
+            } else {
+              fi.style.display = "none";
+            }
+            filledBox.style.display = "flex";
+          });
+
+          suggestBox.appendChild(item);
+        });
+
+        suggestBox.style.display = "block";
+      } catch(e) {
+        suggestBox.style.display = "none";
       }
-
-      const res = await fetch(`/debts/search-customer?q=${q}`);
-      const data = await res.json();
-
-      box.innerHTML = "";
-      data.forEach(c => {
-        const div = document.createElement("div");
-        div.innerHTML = `
-      <strong>${c.customer_name}</strong> - ${c.phone || ""}
-    `;
-        div.style.padding = "6px";
-        div.style.cursor = "pointer";
-
-        div.onclick = () => {
-          input.value = c.customer_name;
-          document.getElementById("phone").value = c.phone || "";
-          document.getElementById("oldImage").src = c.image_url || "";
-          document.getElementById("old_image").value = c.image_url || ""; // ⭐ CỰC QUAN TRỌNG
-          box.style.display = "none";
-        };
-
-
-        box.appendChild(div);
-      });
-
-      box.style.display = "block";
     });
+
+    // Đóng suggest khi click ra ngoài
+    document.addEventListener("click", e => {
+      if (!e.target.closest(".autocomplete-wrap")) {
+        suggestBox.style.display = "none";
+      }
+    });
+
+    // Reset filled khi gõ lại
+    nameInput.addEventListener("keydown", () => {
+      filledBox.style.display = "none";
+    });
+
+    // ---- Preview ảnh mới ----
+    function previewNewImage(input) {
+      const el      = document.getElementById("file-name");
+      const preview = document.getElementById("new-img-preview");
+      const img     = document.getElementById("new-img");
+
+      if (input.files && input.files[0]) {
+        el.textContent  = input.files[0].name;
+        el.className    = "file-chosen";
+        const reader    = new FileReader();
+        reader.onload   = e => { img.src = e.target.result; preview.style.display = "block"; };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function toggleMenu() {
+      document.getElementById("navLinks").classList.toggle("show");
+    }
   </script>
+
+</body>
+</html>
