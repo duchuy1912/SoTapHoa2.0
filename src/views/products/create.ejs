@@ -1,124 +1,582 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>Thêm sản phẩm</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: rgba(255,255,255,0.07);
+      --border-focus: rgba(79,140,255,0.5);
+      --accent: #4f8cff;
+      --accent2: #38e8b5;
+      --danger: #ff5757;
+      --text: #e8eaf6;
+      --muted: #7b82a0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f3f4f6;
-      margin: 0;
-    }
-.menu-btn {
-            font-size: 22px;
-            color: #fff;
-            cursor: pointer;
-            display: none;
-        }  
-    .container {
-      max-width: 600px;
-      margin: 30px auto;
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
     }
 
-    h2 { text-align: center; }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 15px;
-    }
-
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    .unit-row {
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: rgba(26,29,39,0.92);
+      backdrop-filter: blur(14px);
+      padding: 0 36px;
+      height: 60px;
       display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border);
     }
 
-    .unit-row input {
-      flex: 1;
+    .nav-left { display: flex; align-items: center; gap: 8px; }
+
+    .logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin-right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .btn {
-      padding: 8px 14px;
+    .logo-dot { width: 8px; height: 8px; background: var(--accent2); border-radius: 50%; }
+
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.88rem;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-links a:hover { background: var(--surface2); color: var(--text); }
+    .nav-links a.active { background: rgba(79,140,255,0.15); color: var(--accent); }
+
+    .menu-btn {
+      display: none;
+      background: none;
       border: none;
-      border-radius: 6px;
+      color: var(--text);
+      font-size: 22px;
       cursor: pointer;
     }
 
-    .btn-add {
-      background: #2563eb;
-      color: white;
+    /* ===== PAGE ===== */
+    .page {
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px 60px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 580px;
+      animation: fade-up 0.4s ease both;
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .breadcrumb a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--text); }
+    .breadcrumb span { color: var(--text); }
+
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 32px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-icon {
+      width: 44px; height: 44px;
+      background: rgba(56,232,181,0.1);
+      border: 1px solid rgba(56,232,181,0.25);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .card-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .card-subtitle { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+
+    /* Section */
+    .section { margin-bottom: 24px; }
+
+    .section-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Field */
+    .field { margin-bottom: 14px; }
+
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 7px;
+      letter-spacing: 0.04em;
+    }
+
+    .field input[type="text"],
+    .field input[type="number"],
+    .field input:not([type="file"]) {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(79,140,255,0.12);
+    }
+
+    .field input::placeholder { color: var(--muted); }
+
+    /* File input */
+    .file-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--surface2);
+      border: 1px dashed rgba(255,255,255,0.15);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      font-size: 0.88rem;
+      color: var(--muted);
+      position: relative;
+    }
+
+    .file-label:hover { border-color: var(--accent); color: var(--text); }
+
+    .file-label input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    #file-text { pointer-events: none; }
+    .file-chosen { color: var(--accent2); font-size: 0.82rem; }
+
+    /* Preview image */
+    #img-preview {
+      display: none;
       margin-top: 10px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      max-height: 160px;
+    }
+
+    #img-preview img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Units */
+    #unitList { display: flex; flex-direction: column; gap: 10px; }
+
+    .unit-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      transition: border-color 0.2s;
+      animation: slide-in 0.22s ease both;
+    }
+
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateX(-8px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .unit-row:hover { border-color: rgba(255,255,255,0.13); }
+
+    .unit-row input {
+      flex: 1;
+      padding: 8px 10px;
+      background: var(--bg);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 0.86rem;
+      outline: none;
+      transition: border-color 0.2s;
+      min-width: 0;
+    }
+
+    .unit-row input:focus { border-color: var(--border-focus); }
+    .unit-row input::placeholder { color: var(--muted); font-size: 0.82rem; }
+    .unit-row .price-input { max-width: 130px; }
+
+    .unit-num {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .btn-remove {
+      width: 30px; height: 30px;
+      background: rgba(255,87,87,0.1);
+      border: 1px solid rgba(255,87,87,0.2);
+      border-radius: 8px;
+      color: var(--danger);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .btn-remove:hover { background: rgba(255,87,87,0.22); }
+
+    .btn-add-unit {
+      width: 100%;
+      padding: 10px;
+      background: rgba(79,140,255,0.07);
+      border: 1px dashed rgba(79,140,255,0.3);
+      border-radius: 10px;
+      color: var(--accent);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s, border-color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-add-unit:hover { background: rgba(79,140,255,0.14); border-color: rgba(79,140,255,0.5); }
+
+    /* Actions */
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
     }
 
     .btn-save {
-      width: 100%;
-      background: #16a34a;
-      color: white;
-      margin-top: 20px;
-      font-size: 16px;
+      flex: 1;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--accent2), #26c6a0);
+      color: #0f1117;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(56,232,181,0.22);
     }
 
-    .btn-add:hover { background: #1d4ed8; }
-    .btn-save:hover { background: #15803d; }
+    .btn-save:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(56,232,181,0.35);
+    }
+
+    .btn-save:active { transform: translateY(0); }
+
+    .btn-back {
+      padding: 13px 20px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--muted);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-back:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+
+    /* Required star */
+    .req { color: var(--danger); margin-left: 3px; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .navbar { padding: 0 16px; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px; left: 0; right: 0;
+        background: var(--surface);
+        flex-direction: column;
+        border-bottom: 1px solid var(--border);
+        padding: 8px 0;
+      }
+      .nav-links.show { display: flex; }
+      .nav-links a { border-radius: 0; padding: 12px 20px; }
+      .menu-btn { display: block; }
+
+      .card { padding: 20px 14px; }
+      .form-actions { flex-direction: column-reverse; }
+      .btn-back { justify-content: center; }
+      .unit-num { display: none; }
+    }
   </style>
 </head>
+
 <body>
-<%- include('../partials/navbar') %>
 
-<div class="container">
-  <h2>➕ Thêm sản phẩm</h2>
-
-  <form method="POST" action="/products/create" enctype="multipart/form-data">
-    
-    <label>Tên sản phẩm</label>
-    <input name="name" required>
-
-    <label>Barcode</label>
-    <input name="barcode">
-
-    <label>Hình ảnh sản phẩm</label>
-    <input type="file" name="image" accept="image/*" required>
-
-    <hr>
-
-    <h3>Đơn vị bán</h3>
-    <div id="unitList">
-      <div class="unit-row">
-        <input name="unit_name[]" placeholder="Hộp / Lốc / Thùng" required>
-        <input name="price_sell[]" type="number" placeholder="Giá bán" required>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      <div class="logo"><span class="logo-dot"></span> ShopPOS</div>
+      <div class="nav-links" id="navLinks">
+        <a href="/">🏠 Trang chủ</a>
+        <a href="/products" class="active">📦 Sản phẩm</a>
+        <a href="/orders">🧾 Đơn hàng</a>
+        <a href="/customers">👥 Khách hàng</a>
+        <a href="/reports">📊 Báo cáo</a>
+        <a href="/settings">⚙️ Cài đặt</a>
       </div>
     </div>
+  </nav>
 
-    <button type="button" class="btn btn-add" onclick="addUnit()">➕ Thêm đơn vị</button>
+  <div class="page">
+    <div class="container">
 
-    <button type="submit" class="btn btn-save">💾 Lưu sản phẩm</button>
-  </form>
-</div>
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <a href="/">Trang chủ</a>
+        <span>›</span>
+        <a href="/products">Sản phẩm</a>
+        <span>›</span>
+        <span>Thêm mới</span>
+      </div>
 
-<script>
-  function addUnit() {
-    const div = document.createElement("div");
-    div.className = "unit-row";
-    div.innerHTML = `
-      <input name="unit_name[]" placeholder="Hộp / Lốc / Thùng" required>
-      <input name="price_sell[]" type="number" placeholder="Giá bán" required>
-    `;
-    document.getElementById("unitList").appendChild(div);
-  }
-</script>
+      <div class="card">
+
+        <!-- Header -->
+        <div class="card-header">
+          <div class="card-icon">➕</div>
+          <div>
+            <div class="card-title">Thêm sản phẩm mới</div>
+            <div class="card-subtitle">Điền đầy đủ thông tin để tạo sản phẩm</div>
+          </div>
+        </div>
+
+        <form method="POST" action="/products/create" enctype="multipart/form-data">
+
+          <!-- Thông tin cơ bản -->
+          <div class="section">
+            <div class="section-title">Thông tin cơ bản</div>
+
+            <div class="field">
+              <label>Tên sản phẩm <span class="req">*</span></label>
+              <input type="text" name="name" placeholder="VD: Coca Cola 330ml" required>
+            </div>
+
+            <div class="field">
+              <label>Mã barcode</label>
+              <input type="text" name="barcode" placeholder="VD: 8934588012345">
+            </div>
+          </div>
+
+          <!-- Hình ảnh -->
+          <div class="section">
+            <div class="section-title">Hình ảnh</div>
+
+            <div class="field">
+              <label>Ảnh sản phẩm <span class="req">*</span></label>
+              <label class="file-label">
+                <span>📁</span>
+                <span id="file-text">Nhấn để chọn ảnh…</span>
+                <input type="file" name="image" accept="image/*" required onchange="previewImage(this)">
+              </label>
+              <div id="img-preview">
+                <img id="preview-img" src="" alt="preview">
+              </div>
+            </div>
+          </div>
+
+          <!-- Đơn vị bán -->
+          <div class="section">
+            <div class="section-title">Đơn vị bán</div>
+
+            <div id="unitList">
+              <div class="unit-row">
+                <span class="unit-num">1</span>
+                <input name="unit_name[]" placeholder="Hộp / Lốc / Thùng" required>
+                <input name="price_sell[]" type="number" placeholder="Giá bán (đ)" class="price-input" required>
+              </div>
+            </div>
+
+            <button type="button" class="btn-add-unit" onclick="addUnit()">＋ Thêm đơn vị</button>
+          </div>
+
+          <!-- Actions -->
+          <div class="form-actions">
+            <a href="/" class="btn-back">↩ Quay lại</a>
+            <button type="submit" class="btn-save">💾 Lưu sản phẩm</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let unitCount = 1;
+
+    function addUnit() {
+      unitCount++;
+      const div = document.createElement("div");
+      div.className = "unit-row";
+      div.innerHTML = `
+        <span class="unit-num">${unitCount}</span>
+        <input name="unit_name[]" placeholder="Hộp / Lốc / Thùng" required>
+        <input name="price_sell[]" type="number" placeholder="Giá bán (đ)" class="price-input" required>
+        <button type="button" class="btn-remove" onclick="removeUnit(this)" title="Xoá">✕</button>
+      `;
+      document.getElementById("unitList").appendChild(div);
+      div.querySelector("input[name='unit_name[]']").focus();
+      updateNums();
+    }
+
+    function removeUnit(btn) {
+      const row = btn.parentElement;
+      row.style.transition = "opacity 0.18s, transform 0.18s";
+      row.style.opacity = "0";
+      row.style.transform = "translateX(-8px)";
+      setTimeout(() => { row.remove(); updateNums(); }, 200);
+    }
+
+    function updateNums() {
+      document.querySelectorAll("#unitList .unit-row").forEach((row, i) => {
+        const num = row.querySelector(".unit-num");
+        if (num) num.textContent = i + 1;
+      });
+    }
+
+    function previewImage(input) {
+      const text = document.getElementById("file-text");
+      const preview = document.getElementById("img-preview");
+      const img = document.getElementById("preview-img");
+
+      if (input.files && input.files[0]) {
+        text.textContent = input.files[0].name;
+        text.className = "file-chosen";
+        const reader = new FileReader();
+        reader.onload = e => {
+          img.src = e.target.result;
+          preview.style.display = "block";
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function toggleMenu() {
+      document.getElementById("navLinks").classList.toggle("show");
+    }
+  </script>
 
 </body>
 </html>
