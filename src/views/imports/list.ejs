@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Lịch sử nhập hàng</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:rgba(255,255,255,0.07);--accent:#4f8cff;--accent2:#38e8b5;--danger:#ff5757;--text:#e8eaf6;--muted:#7b82a0}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+    .navbar{background:rgba(26,29,39,.92);backdrop-filter:blur(14px);padding:0 36px;height:60px;display:flex;align-items:center;position:sticky;top:0;z-index:1000;border-bottom:1px solid var(--border)}
+    .nav-left{display:flex;align-items:center;gap:8px}
+    .logo{font-family:'Sora',sans-serif;font-weight:700;font-size:1.1rem;color:var(--accent);margin-right:16px;display:flex;align-items:center;gap:8px}
+    .logo-dot{width:8px;height:8px;background:var(--accent2);border-radius:50%}
+    .nav-links{display:flex;align-items:center;gap:4px}
+    .nav-links a{color:var(--muted);text-decoration:none;font-weight:500;font-size:.88rem;padding:6px 14px;border-radius:8px;transition:all .2s}
+    .nav-links a:hover{background:var(--surface2);color:var(--text)}
+    .nav-links a.active{background:rgba(79,140,255,.15);color:var(--accent)}
+    .menu-btn{display:none;background:none;border:none;color:var(--text);font-size:22px;cursor:pointer}
+
+    .page-header{padding:32px 36px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .page-title{font-family:'Sora',sans-serif;font-size:1.6rem;font-weight:700;display:flex;align-items:center;gap:10px}
+    .badge-count{background:rgba(79,140,255,.15);color:var(--accent);font-size:.76rem;font-weight:600;padding:3px 10px;border-radius:20px}
+
+    .btn-add{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;background:linear-gradient(135deg,var(--accent2),#26c6a0);color:#0f1117;border:none;border-radius:10px;font-family:'Sora',sans-serif;font-size:.85rem;font-weight:700;text-decoration:none;cursor:pointer;white-space:nowrap;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 14px rgba(56,232,181,.25)}
+    .btn-add:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(56,232,181,.38)}
+
+    /* Summary cards */
+    .summary-row{display:flex;gap:14px;padding:20px 36px 0;flex-wrap:wrap}
+    .summary-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 22px;flex:1;min-width:150px;animation:fade-up .4s ease both}
+    .summary-card:nth-child(2){animation-delay:.06s}
+    .summary-card:nth-child(3){animation-delay:.12s}
+    @keyframes fade-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .s-label{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+    .s-value{font-family:'Sora',sans-serif;font-size:1.3rem;font-weight:700}
+    .s-blue{color:var(--accent)} .s-green{color:var(--accent2)} .s-red{color:var(--danger)}
+
+    /* Toolbar */
+    .toolbar{padding:20px 36px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .search-wrap{position:relative;flex:1;max-width:340px}
+    .search-wrap .si{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+    #searchInput{width:100%;padding:10px 14px 10px 38px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Be Vietnam Pro',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s,box-shadow .2s}
+    #searchInput::placeholder{color:var(--muted)}
+    #searchInput:focus{border-color:rgba(79,140,255,.5);box-shadow:0 0 0 3px rgba(79,140,255,.12)}
+
+    .filter-select{padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Be Vietnam Pro',sans-serif;font-size:.86rem;outline:none;cursor:pointer}
+
+    .divider{height:1px;background:var(--border);margin:20px 36px 0}
+
+    /* Table */
+    .table-wrap{padding:20px 36px 48px;overflow-x:auto;animation:fade-up .45s ease both;animation-delay:.1s}
+    table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+    thead tr{background:var(--surface2)}
+    th{padding:13px 16px;font-family:'Sora',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;white-space:nowrap}
+    td{padding:12px 16px;font-size:.87rem;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+    tbody tr{transition:background .15s}
+    tbody tr:hover{background:var(--surface2)}
+    tbody tr:last-child td{border-bottom:none}
+
+    .product-cell{display:flex;align-items:center;gap:10px}
+    .p-img{width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid var(--border);flex-shrink:0}
+    .p-no-img{width:40px;height:40px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+    .p-name{font-weight:600;font-size:.88rem}
+    .p-unit{font-size:.75rem;color:var(--muted);margin-top:2px}
+
+    .qty-badge{display:inline-flex;align-items:center;justify-content:center;background:rgba(79,140,255,.12);color:var(--accent);border:1px solid rgba(79,140,255,.2);border-radius:8px;padding:3px 10px;font-family:'Sora',sans-serif;font-weight:700;font-size:.86rem}
+    .cost-cell{font-family:'Sora',sans-serif;font-weight:700;color:var(--danger);font-size:.92rem}
+    .supplier-cell{font-size:.82rem;color:var(--muted)}
+    .date-cell{font-size:.8rem;color:var(--muted);white-space:nowrap}
+
+    .expire-ok{color:var(--accent2);font-size:.8rem}
+    .expire-warn{color:#f59e0b;font-size:.8rem}
+    .expire-none{color:var(--muted);font-size:.8rem}
+
+    .btn-del{width:30px;height:30px;background:rgba(255,87,87,.1);border:1px solid rgba(255,87,87,.22);border-radius:8px;color:var(--danger);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:background .2s}
+    .btn-del:hover{background:rgba(255,87,87,.22)}
+
+    .empty-row td{padding:52px 20px;color:var(--muted);font-size:.9rem;text-align:center}
+
+    @media(max-width:768px){
+      .navbar{padding:0 16px}
+      .nav-links{display:none;position:absolute;top:60px;left:0;right:0;background:var(--surface);flex-direction:column;border-bottom:1px solid var(--border);padding:8px 0}
+      .nav-links.show{display:flex}
+      .nav-links a{border-radius:0;padding:12px 20px}
+      .menu-btn{display:block}
+      .page-header,.summary-row,.toolbar,.divider{padding-left:16px;padding-right:16px}
+      .table-wrap{padding:16px 16px 40px}
+      th,td{padding:10px 10px;font-size:.8rem}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      <div class="logo"><span class="logo-dot"></span> ShopPOS</div>
+      <div class="nav-links" id="navLinks">
+        <!-- <a href="/">🏠 Trang chủ</a> -->
+        <a href="/products" >📦 Sản phẩm</a>
+        <a href="/orders">🧾 Đơn hàng</a>
+        <a href="/debts" class="active">📒 Sổ nợ</a>
+        <a href="/reports">📊 Báo cáo</a>
+        <a href="/settings">⚙️ Cài đặt</a>
+      </div>
+    </div>
+  </nav>
+
+<!-- Page header -->
+<div class="page-header">
+  <div class="page-title">
+    📥 Lịch sử nhập hàng
+    <span class="badge-count" id="rowCount"><%= imports.length %> phiếu</span>
+  </div>
+  <a href="/imports/create" class="btn-add">＋ Tạo phiếu nhập</a>
+</div>
+
+<!-- Summary -->
+<div class="summary-row">
+  <div class="summary-card">
+    <div class="s-label">Phiếu nhập tháng này</div>
+    <div class="s-value s-blue"><%= summary.total_records || 0 %></div>
+  </div>
+  <div class="summary-card">
+    <div class="s-label">Tổng tiền nhập tháng này</div>
+    <div class="s-value s-red"><%= Number(summary.total_cost || 0).toLocaleString('vi-VN') %> đ</div>
+  </div>
+  <div class="summary-card">
+    <div class="s-label">Tổng sản phẩm nhập</div>
+    <div class="s-value s-green"><%= Number(summary.total_qty || 0).toLocaleString('vi-VN') %></div>
+  </div>
+</div>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" id="searchInput" placeholder="Tìm sản phẩm, nhà cung cấp..." oninput="filterTable()">
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Table -->
+<div class="table-wrap">
+  <table id="importTable">
+    <thead>
+      <tr>
+        <th>Sản phẩm</th>
+        <th>Số lượng</th>
+        <th>Giá nhập</th>
+        <th>Tổng tiền</th>
+        <th>Nhà cung cấp</th>
+        <th>Hạn SD</th>
+        <th>Ngày nhập</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+
+      <% if(imports.length === 0) { %>
+      <tr class="empty-row"><td colspan="8">📭 Chưa có phiếu nhập nào.</td></tr>
+      <% } %>
+
+      <% imports.forEach(imp => {
+           const now     = new Date();
+           const expDate = imp.expire_date ? new Date(imp.expire_date) : null;
+           const diffDays = expDate ? Math.ceil((expDate - now) / 86400000) : null;
+           let expClass = 'expire-none', expText = '—';
+           if (expDate) {
+             expText  = expDate.toLocaleDateString('vi-VN');
+             expClass = diffDays < 30 ? 'expire-warn' : 'expire-ok';
+             if (diffDays < 0) { expClass = 'expire-warn'; expText += ' ⚠️'; }
+           }
+      %>
+      <tr data-search="<%= (imp.product_name + ' ' + (imp.supplier||'')).toLowerCase() %>">
+        <td>
+          <div class="product-cell">
+            <% if(imp.image_url) { %>
+              <img src="<%= imp.image_url %>" class="p-img">
+            <% } else { %>
+              <div class="p-no-img">📦</div>
+            <% } %>
+            <div>
+              <div class="p-name"><%= imp.product_name %></div>
+              <div class="p-unit"><%= imp.unit_name %></div>
+            </div>
+          </div>
+        </td>
+        <td><span class="qty-badge"><%= imp.quantity %></span></td>
+        <td class="supplier-cell"><%= Number(imp.price_import).toLocaleString('vi-VN') %> đ</td>
+        <td class="cost-cell"><%= Number(imp.total_cost).toLocaleString('vi-VN') %> đ</td>
+        <td class="supplier-cell"><%= imp.supplier || '—' %></td>
+        <td class="<%= expClass %>"><%= expText %></td>
+        <td class="date-cell"><%= new Date(imp.imported_at).toLocaleDateString('vi-VN') %></td>
+        <td>
+          <form method="POST" action="/imports/delete/<%= imp.id %>"
+            onsubmit="return confirm('Xoá phiếu nhập này?')" style="display:contents">
+            <button class="btn-del" title="Xoá">🗑</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function filterTable() {
+    const kw = document.getElementById('searchInput').value.toLowerCase();
+    let count = 0;
+    document.querySelectorAll('#tbody tr[data-search]').forEach(row => {
+      const match = row.dataset.search.includes(kw);
+      row.style.display = match ? '' : 'none';
+      if (match) count++;
+    });
+    document.getElementById('rowCount').textContent = count + ' phiếu';
+  }
+
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('show');
+  }
+</script>
+
+</body>
+</html>
