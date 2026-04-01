@@ -14,7 +14,7 @@ app.set("views", path.join(__dirname, "views"));
 const productRoute = require("./modules/products/product.route");
 const categoryRoute = require("./modules/categories/category.route");
 const debtRoute = require("./modules/debts/debt.route");
-const importRoutes = require("./modules/imports/import.routes");
+// const importRoutes = require("./modules/imports/import.route");
 
 // Trang chủ → list sản phẩm
 app.get("/", (req, res) => {
@@ -24,11 +24,11 @@ app.get("/", (req, res) => {
 app.use("/products", productRoute);
 app.use("/categories", categoryRoute);
 app.use("/debts", debtRoute);
-app.use("/imports", importRoutes);
+// app.use("/imports", importRoutes);
 console.log("Loading import routes...");
-// app.listen(3000, () => {
-//   console.log("Server chạy tại http://localhost:3000");
-// });
-app.listen(3000, '192.168.1.11', () => {
-  console.log("Server chạy tại http://192.168.1.11:3000");
+app.listen(3000, () => {
+  console.log("Server chạy tại http://localhost:3000");
 });
+// app.listen(3000, '192.168.1.11', () => {
+//   console.log("Server chạy tại http://192.168.1.11:3000");
+// });
