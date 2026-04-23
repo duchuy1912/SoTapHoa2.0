@@ -218,6 +218,59 @@
       cursor: pointer;
     }
   </style>
+
+  <!-- Tom Select Custom Styles -->
+  <style>
+    .ts-wrapper {
+      background: var(--surface2) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 8px !important;
+    }
+
+    .ts-wrapper.focus {
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 0 2px var(--border-focus) !important;
+    }
+
+    .ts-control {
+      background: var(--surface2) !important;
+      color: var(--text) !important;
+      border: none !important;
+      padding: 8px 10px !important;
+      border-radius: 6px !important;
+    }
+
+    .ts-control input {
+      color: var(--text) !important;
+    }
+
+    .ts-dropdown {
+      background: var(--surface) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 8px !important;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35) !important;
+    }
+
+    .ts-dropdown .option {
+      color: var(--text) !important;
+      padding: 8px 12px !important;
+    }
+
+    .ts-dropdown .option:hover {
+      background: var(--surface2) !important;
+    }
+
+    .ts-dropdown .active {
+      background: rgba(79,140,255,0.15) !important;
+      color: var(--accent) !important;
+    }
+
+    .ts-wrapper .ts-control > .item {
+      background: var(--accent) !important;
+      color: white !important;
+      border-radius: 4px !important;
+    }
+  </style>
   <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 </head>
@@ -270,7 +323,7 @@
 
           <div id="itemList">
             <div class="item-row">
-              <select name="product_id[]" onchange="updateUnits(this)" required>
+              <select name="product_id[]" class="product-select" onchange="updateUnits(this)" required>
                 <option value="">Chọn sản phẩm</option>
                 <% products.forEach(product => { %>
                 <option value="<%= product.id %>"><%= product.name %></option>
@@ -305,6 +358,20 @@
   <script>
     const products = JSON.parse(document.getElementById('products-data').textContent);
 
+    // Khởi tạo Tom Select cho tất cả product selects
+    function initProductSelects() {
+      document.querySelectorAll('.product-select').forEach(select => {
+        if (!select.tomselect) {
+          new TomSelect(select, {
+            placeholder: 'Tìm kiếm sản phẩm...',
+            create: false,
+            maxOptions: null,
+            sortField: {field: "text", direction: "asc"}
+          });
+        }
+      });
+    }
+
     function updateUnits(select) {
       const row = select.closest('.item-row');
       const unitSelect = row.querySelector('select[name="unit_id[]"]');
@@ -328,12 +395,11 @@
       const itemList = document.getElementById('itemList');
       const newRow = document.createElement('div');
       newRow.className = 'item-row';
+      const productOptions = products.map(product => `<option value="${product.id}">${product.name}</option>`).join('');
       newRow.innerHTML = `
-        <select name="product_id[]" onchange="updateUnits(this)" required>
+        <select name="product_id[]" class="product-select" onchange="updateUnits(this)" required>
           <option value="">Chọn sản phẩm</option>
-          <% products.forEach(product => { %>
-          <option value="<%= product.id %>"><%= product.name %></option>
-          <% }) %>
+          ${productOptions}
         </select>
         <select name="unit_id[]" required>
           <option value="">Đơn vị</option>
@@ -343,19 +409,36 @@
         <button type="button" class="btn-remove" onclick="removeItem(this)">✕</button>
       `;
       itemList.appendChild(newRow);
+
+      // Khởi tạo Tom Select cho select mới ngay lập tức
+      const newSelect = newRow.querySelector('.product-select');
+      if (newSelect) {
+        new TomSelect(newSelect, {
+          placeholder: 'Tìm kiếm sản phẩm...',
+          create: false,
+          maxOptions: null,
+          sortField: {field: "text", direction: "asc"}
+        });
+      }
     }
 
     function removeItem(btn) {
       const row = btn.closest('.item-row');
       if (document.querySelectorAll('.item-row').length > 1) {
+        // Hủy Tom Select trước khi xóa
+        const select = row.querySelector('.product-select');
+        if (select && select.tomselect) {
+          select.tomselect.destroy();
+        }
         row.remove();
       }
     }
 
-    // Set default date to today
+    // Set default date to today và khởi tạo selects
     document.addEventListener('DOMContentLoaded', function() {
       const today = new Date().toISOString().split('T')[0];
       document.querySelector('input[name="import_date"]').value = today;
+      initProductSelects();
     });
   </script>
 </body>
