@@ -73,11 +73,7 @@
     }
   }
 </style>
-<!-- <div class="navbar">
-  <a href="/">🏠 Sản phẩm</a>
-  <a href="/products/create">➕ Thêm sản phẩm</a>
-  <a href="/debts">📒 Sổ ghi nợ</a>
-</div> -->
+
 <div class="navbar">
   <div class="logo">
     🛒 Quản lý
@@ -89,6 +85,14 @@
     <a href="/">🏠 Sản phẩm</a>
     <a href="/products/create">➕ Thêm hàng</a>
     <a href="/imports">📦 Nhập hàng</a>
+    <a href="/reports">📊 Báo cáo</a>
     <a href="/debts">📒 Ghi nợ</a>
   </div>
 </div>
+
+<script>
+  function toggleMenu() {
+    const navLinks = document.getElementById('navLinks');
+    navLinks.classList.toggle('show');
+  }
+</script>

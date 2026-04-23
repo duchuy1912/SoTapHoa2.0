@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Báo cáo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: rgba(255,255,255,0.07);
+      --accent: #4f8cff;
+      --accent2: #38e8b5;
+      --danger: #ff5757;
+      --text: #e8eaf6;
+      --muted: #7b82a0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: rgba(26, 29, 39, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 0 36px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--accent);
+      letter-spacing: -0.3px;
+      margin-right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-dot {
+      width: 8px; height: 8px;
+      background: var(--accent2);
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.88rem;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-links a:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .nav-links a.active {
+      background: rgba(79,140,255,0.15);
+      color: var(--accent);
+    }
+
+    .menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 22px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 36px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .title { font-size: 1.5rem; font-weight: 600; }
+
+    .filters {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .filter-group label {
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .filter-group input, .filter-group select {
+      padding: 8px 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: inherit;
+    }
+
+    .filter-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .filter-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      align-self: flex-end;
+      font-weight: 500;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--accent2);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab {
+      padding: 12px 16px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th {
+      background: var(--surface2);
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table tr:hover {
+      background: var(--surface2);
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin-bottom: 24px;
+    }
+
+    .export-btn {
+      background: var(--accent2);
+      color: var(--bg);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+   <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      <div class="logo"><span class="logo-dot"></span> ShopPOS</div>
+      <div class="nav-links" id="navLinks">
+        <!-- <a href="/">🏠 Trang chủ</a> -->
+        <a href="/products" >📦 Sản phẩm</a>
+        <a href="/imports">🧾 Nhập Hàng</a>
+        <a href="/debts">📒 Sổ nợ</a>
+        <a href="/reports" class="active">📊 Báo cáo</a>
+        <a href="/settings">⚙️ Cài đặt</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="header">
+      <h1 class="title">📊 Báo cáo nhập hàng</h1>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <div class="filter-group">
+        <label>Từ ngày</label>
+        <input type="date" id="startDate" value="<%= startDate %>">
+      </div>
+      <div class="filter-group">
+        <label>Đến ngày</label>
+        <input type="date" id="endDate" value="<%= endDate %>">
+      </div>
+      <div class="filter-group">
+        <label>&nbsp;</label>
+        <button class="filter-btn" onclick="applyFilter()">🔍 Lọc dữ liệu</button>
+      </div>
+    </div>
+
+    <!-- Overall Stats -->
+
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab <%= currentType === 'supplier' ? 'active' : '' %>" onclick="switchTab('supplier')">
+        🏢 Theo nhà cung cấp
+      </button>
+      <button class="tab <%= currentType === 'product' ? 'active' : '' %>" onclick="switchTab('product')">
+        📦 Theo sản phẩm
+      </button>
+      <button class="tab <%= currentType === 'daily' ? 'active' : '' %>" onclick="switchTab('daily')">
+        📅 Theo ngày
+      </button>
+      <button class="tab <%= currentType === 'monthly' ? 'active' : '' %>" onclick="switchTab('monthly')">
+        📈 Theo tháng
+      </button>
+    </div>
+
+    <!-- Supplier Report -->
+    <div class="tab-content <%= currentType === 'supplier' ? 'active' : '' %>" id="supplier-tab">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2>Báo cáo theo nhà cung cấp</h2>
+        <a href="/reports/export/supplier?startDate=<%= startDate %>&endDate=<%= endDate %>" class="export-btn">
+          💾 Xuất Excel
+        </a>
+      </div>
+      <% if (supplierReport && supplierReport.length > 0) { %>
+      <div class="card">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nhà cung cấp</th>
+              <th style="text-align: right;">Số lần nhập</th>
+              <th style="text-align: right;">Tổng tiền</th>
+              <th style="text-align: right;">Trung bình</th>
+              <th>Lần nhập đầu</th>
+              <th>Lần nhập cuối</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% supplierReport.forEach(item => { %>
+            <tr>
+              <td><strong><%= item.supplier_name %></strong></td>
+              <td style="text-align: right;"><%= item.import_count %></td>
+              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(item.total_amount) %> đ</td>
+              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(Math.round(item.avg_amount)) %> đ</td>
+              <td><%= new Date(item.first_import_date).toLocaleDateString('vi-VN') %></td>
+              <td><%= new Date(item.last_import_date).toLocaleDateString('vi-VN') %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- Product Report -->
+    <div class="tab-content <%= currentType === 'product' ? 'active' : '' %>" id="product-tab">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2>Báo cáo theo sản phẩm</h2>
+        <a href="/reports/export/product?startDate=<%= startDate %>&endDate=<%= endDate %>" class="export-btn">
+          💾 Xuất Excel
+        </a>
+      </div>
+      <% if (productReport && productReport.length > 0) { %>
+      <div class="card">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th>Đơn vị</th>
+              <th style="text-align: right;">Số lượng</th>
+              <th style="text-align: right;">Lần nhập</th>
+              <th style="text-align: right;">Giá min</th>
+              <th style="text-align: right;">Giá max</th>
+              <th style="text-align: right;">Tổng chi phí</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% productReport.forEach(item => { %>
+            <tr>
+              <td><strong><%= item.product_name %></strong></td>
+              <td><%= item.unit_name %></td>
+              <td style="text-align: right;"><%= item.total_quantity %></td>
+              <td style="text-align: right;"><%= item.import_times %></td>
+              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(Math.round(item.min_price_buy)) %> đ</td>
+              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(Math.round(item.max_price_buy)) %> đ</td>
+              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(item.total_cost) %> đ</td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- Daily Report -->
+    <div class="tab-content <%= currentType === 'daily' ? 'active' : '' %>" id="daily-tab">
+      <h2>Báo cáo theo ngày</h2>
+      <% if (dailyReport && dailyReport.length > 0) { %>
+      <div class="card">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Ngày</th>
+              <th style="text-align: right;">Số lần nhập</th>
+              <th style="text-align: right;">Số nhà cung cấp</th>
+              <th style="text-align: right;">Tổng tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% dailyReport.forEach(item => { %>
+            <tr>
+              <td><strong><%= new Date(item.import_date).toLocaleDateString('vi-VN') %></strong></td>
+              <td style="text-align: right;"><%= item.import_count %></td>
+              <td style="text-align: right;"><%= item.supplier_count %></td>
+              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(item.daily_total) %> đ</td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- Monthly Report -->
+    <div class="tab-content <%= currentType === 'monthly' ? 'active' : '' %>" id="monthly-tab">
+      <h2>Báo cáo theo tháng</h2>
+      <% if (monthlyReport && monthlyReport.length > 0) { %>
+      <div class="card">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Tháng</th>
+              <th style="text-align: right;">Số lần nhập</th>
+              <th style="text-align: right;">Số nhà cung cấp</th>
+              <th style="text-align: right;">Tổng tiền</th>
+              <th style="text-align: right;">Trung bình</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% monthlyReport.forEach(item => { %>
+            <tr>
+              <td><strong><%= new Date(item.month).toLocaleDateString('vi-VN', {month: 'long', year: 'numeric'}) %></strong></td>
+              <td style="text-align: right;"><%= item.import_count %></td>
+              <td style="text-align: right;"><%= item.supplier_count %></td>
+              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(item.monthly_total) %> đ</td>
+              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(Math.round(item.avg_import_value)) %> đ</td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- Top Suppliers & Products -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+      <% if (topSuppliers && topSuppliers.length > 0) { %>
+      <div class="card">
+        <h3>🏆 Top 10 Nhà cung cấp</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nhà cung cấp</th>
+              <th style="text-align: right;">Tổng tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% topSuppliers.forEach((item, idx) => { %>
+            <tr>
+              <td><strong><%= idx + 1 %>. <%= item.supplier_name %></strong></td>
+              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(item.total_amount) %> đ</td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+
+      <% if (topProducts && topProducts.length > 0) { %>
+      <div class="card">
+        <h3>🏆 Top 10 Sản phẩm</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th style="text-align: right;">Chi phí</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% topProducts.forEach((item, idx) => { %>
+            <tr>
+              <td><strong><%= idx + 1 %>. <%= item.name %></strong></td>
+              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(item.total_cost) %> đ</td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(type) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+
+      // Show selected tab
+      document.getElementById(type + '-tab').classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function applyFilter() {
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      const type = document.querySelector('.tab.active').textContent.includes('nhà cung cấp') ? 'supplier' :
+                   document.querySelector('.tab.active').textContent.includes('sản phẩm') ? 'product' :
+                   document.querySelector('.tab.active').textContent.includes('ngày') ? 'daily' : 'monthly';
+
+      const params = new URLSearchParams();
+      params.append('type', type);
+      if (startDate) params.append('startDate', startDate);
+      if (endDate) params.append('endDate', endDate);
+
+      window.location.href = '/reports?' + params.toString();
+    }
+  </script>
+</body>
+</html>
