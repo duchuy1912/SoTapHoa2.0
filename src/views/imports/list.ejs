@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách nhập hàng</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: rgba(255,255,255,0.07);
+      --accent: #4f8cff;
+      --accent2: #38e8b5;
+      --danger: #ff5757;
+      --text: #e8eaf6;
+      --muted: #7b82a0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: rgba(26, 29, 39, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 0 36px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--accent);
+      letter-spacing: -0.3px;
+      margin-right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-dot {
+      width: 8px; height: 8px;
+      background: var(--accent2);
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.88rem;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-links a:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .nav-links a.active {
+      background: rgba(79,140,255,0.15);
+      color: var(--accent);
+    }
+
+    .menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 22px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 36px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .title { font-size: 1.5rem; font-weight: 600; }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .btn:hover { background: #3d6bd4; }
+
+    .card {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .supplier { font-weight: 600; }
+    .date { color: var(--muted); font-size: 0.9rem; }
+
+    .card-body {
+      padding: 16px 20px;
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .item:last-child { border-bottom: none; }
+
+    .total {
+      font-weight: 600;
+      color: var(--accent2);
+      text-align: right;
+      margin-top: 12px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-edit {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+
+    .btn-delete {
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+    <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+      <div class="logo"><span class="logo-dot"></span> ShopPOS</div>
+      <div class="nav-links" id="navLinks">
+        <!-- <a href="/">🏠 Trang chủ</a> -->
+        <a href="/products">📦 Sản phẩm</a>
+        <a href="/imports" class="active">🧾 Nhập Hàng</a>
+        <a href="/debts">📒 Sổ nợ</a>
+        <a href="/reports">📊 Báo cáo</a>
+        <a href="/settings">⚙️ Cài đặt</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="header">
+      <h1 class="title">📦 Danh sách nhập hàng</h1>
+      <a href="/imports/create" class="btn">＋ Thêm nhập hàng</a>
+    </div>
+
+<% 
+  const formatMoney = (money) => 
+    new Intl.NumberFormat('vi-VN').format(money) + ' đ';
+
+  imports
+    .sort((a, b) => new Date(b.import_date) - new Date(a.import_date))
+    .forEach(importData => { 
+%>
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="supplier"><%= importData.supplier_name %></div>
+      <div class="date">
+        <%= new Date(importData.import_date).toLocaleDateString('vi-VN') %>
+      </div>
+    </div>
+    <div class="actions">
+      <a href="/imports/edit/<%= importData.id %>" class="btn-edit">✏️ Sửa</a>
+      <form method="POST" action="/imports/delete/<%= importData.id %>" style="display:inline;" onsubmit="return confirm('Xác nhận xóa?')">
+        <button type="submit" class="btn-delete">🗑️ Xóa</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <% importData.items.forEach(item => { %>
+    <div class="item">
+      <span>
+        <%= item.product_name %> (<%= item.unit_name %>)
+      </span>
+      <span>
+        <%= item.quantity %> × 
+        <%= formatMoney(item.price_buy) %> 
+        = 
+        <%= formatMoney(item.quantity * item.price_buy) %>
+      </span>
+    </div>
+    <% }) %>
+
+    <div class="total">
+      Tổng: <%= formatMoney(importData.total_amount) %>
+    </div>
+
+    <% if (importData.note) { %>
+    <div style="margin-top: 8px; color: var(--muted); font-size: 0.9rem;">
+      Ghi chú: <%= importData.note %>
+    </div>
+    <% } %>
+  </div>
+</div>
+<% }) %>
+  </div>
+</body>
+</html>

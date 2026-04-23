@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Thêm nhập hàng</title>
+  <title>Sửa nhập hàng</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -218,8 +218,6 @@
       cursor: pointer;
     }
   </style>
-  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 </head>
 <body>
     <!-- ===== NAVBAR ===== -->
@@ -240,9 +238,9 @@
 
   <div class="container">
     <div class="form-card">
-      <h1 style="margin-bottom: 24px;">📦 Thêm nhập hàng</h1>
+      <h1 style="margin-bottom: 24px;">📦 Sửa nhập hàng</h1>
 
-      <form method="POST" action="/imports/create">
+      <form method="POST" action="/imports/edit/<%= importData.id %>">
 
         <!-- Thông tin cơ bản -->
         <div class="section">
@@ -250,17 +248,17 @@
 
           <div class="field">
             <label>Tên nhà cung cấp <span style="color: var(--danger);">*</span></label>
-            <input type="text" name="supplier_name" placeholder="VD: Công ty TNHH ABC" required>
+            <input type="text" name="supplier_name" value="<%= importData.supplier_name %>" placeholder="VD: Công ty TNHH ABC" required>
           </div>
 
           <div class="field">
             <label>Ngày nhập <span style="color: var(--danger);">*</span></label>
-            <input type="date" name="import_date" required>
+            <input type="date" name="import_date" value="<%= new Date(importData.import_date).toISOString().split('T')[0] %>" required>
           </div>
 
           <div class="field">
             <label>Ghi chú</label>
-            <textarea name="note" rows="3" placeholder="Ghi chú thêm..."></textarea>
+            <textarea name="note" rows="3" placeholder="Ghi chú thêm..."><%= importData.note || '' %></textarea>
           </div>
         </div>
 
@@ -269,20 +267,25 @@
           <div class="section-title">Danh sách sản phẩm nhập</div>
 
           <div id="itemList">
+            <% importData.items.forEach(item => { %>
             <div class="item-row">
               <select name="product_id[]" onchange="updateUnits(this)" required>
                 <option value="">Chọn sản phẩm</option>
                 <% products.forEach(product => { %>
-                <option value="<%= product.id %>"><%= product.name %></option>
+                <option value="<%= product.id %>" <%= product.id == item.product_id ? 'selected' : '' %>><%= product.name %></option>
                 <% }) %>
               </select>
               <select name="unit_id[]" required>
                 <option value="">Đơn vị</option>
+                <% products.find(p => p.id == item.product_id).units.forEach(unit => { %>
+                <option value="<%= unit.id %>" <%= unit.id == item.unit_id ? 'selected' : '' %>><%= unit.unit_name %></option>
+                <% }) %>
               </select>
-              <input name="quantity[]" type="number" placeholder="Số lượng" min="1" required>
-              <input name="price_buy[]" type="number" placeholder="Giá nhập (đ)" min="0" step="0.01" required>
+              <input name="quantity[]" type="number" value="<%= item.quantity %>" placeholder="Số lượng" min="1" required>
+              <input name="price_buy[]" type="number" value="<%= item.price_buy %>" placeholder="Giá nhập (đ)" min="0" step="0.01" required>
               <button type="button" class="btn-remove" onclick="removeItem(this)">✕</button>
             </div>
+            <% }) %>
           </div>
 
           <button type="button" class="btn-add" onclick="addItem()">＋ Thêm sản phẩm</button>
@@ -291,7 +294,7 @@
         <!-- Actions -->
         <div class="form-actions">
           <a href="/imports" class="btn-back">↩ Quay lại</a>
-          <button type="submit" class="btn-save">💾 Lưu nhập hàng</button>
+          <button type="submit" class="btn-save">💾 Cập nhật</button>
         </div>
 
       </form>
@@ -331,9 +334,7 @@
       newRow.innerHTML = `
         <select name="product_id[]" onchange="updateUnits(this)" required>
           <option value="">Chọn sản phẩm</option>
-          <% products.forEach(product => { %>
-          <option value="<%= product.id %>"><%= product.name %></option>
-          <% }) %>
+          ${products.map(product => `<option value="${product.id}">${product.name}</option>`).join('')}
         </select>
         <select name="unit_id[]" required>
           <option value="">Đơn vị</option>
@@ -351,12 +352,6 @@
         row.remove();
       }
     }
-
-    // Set default date to today
-    document.addEventListener('DOMContentLoaded', function() {
-      const today = new Date().toISOString().split('T')[0];
-      document.querySelector('input[name="import_date"]').value = today;
-    });
   </script>
 </body>
 </html>
