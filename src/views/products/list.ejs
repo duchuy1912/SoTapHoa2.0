@@ -447,7 +447,8 @@
     .empty-state p { font-size: 0.95rem; }
 
     /* ===== ADD BUTTON ===== */
-    .btn-add-product {
+    .btn-add-product,
+    .btn-add-category {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -466,9 +467,59 @@
       box-shadow: 0 4px 14px rgba(56,232,181,0.25);
     }
 
-    .btn-add-product:hover {
+    .btn-add-product:hover,
+    .btn-add-category:hover {
       transform: translateY(-1px);
       box-shadow: 0 6px 20px rgba(56,232,181,0.38);
+    }
+
+    .category-filter {
+      width: 100%;
+      padding: 18px 36px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .category-filter span {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-right: 6px;
+    }
+
+    .category-chip {
+      background: var(--surface2);
+      color: var(--text);
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+      font-size: 0.85rem;
+    }
+
+    .category-chip:hover {
+      background: rgba(79,140,255,0.13);
+      border-color: rgba(79,140,255,0.3);
+    }
+
+    .category-chip.active {
+      background: rgba(79,140,255,0.18);
+      border-color: rgba(79,140,255,0.4);
+      color: var(--accent);
+    }
+
+    .category-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(79,140,255,0.08);
+      color: var(--accent2);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      margin-bottom: 10px;
     }
 
     .btn-add-product:active { transform: translateY(0); }
@@ -499,20 +550,7 @@
 <body>
 
   <!-- ===== NAVBAR ===== -->
-  <nav class="navbar">
-    <div class="nav-left">
-      <button class="menu-btn" onclick="toggleMenu()">☰</button>
-      <div class="logo"><span class="logo-dot"></span> ShopPOS</div>
-      <div class="nav-links" id="navLinks">
-        <!-- <a href="/">🏠 Trang chủ</a> -->
-        <a href="/products" class="active">📦 Sản phẩm</a>
-        <a href="/imports">🧾 Nhập Hàng</a>
-        <a href="/debts">📒 Sổ nợ</a>
-        <a href="/reports">📊 Báo cáo</a>
-        <a href="/settings">⚙️ Cài đặt</a>
-      </div>
-    </div>
-  </nav>
+  <%- include('../partials/navbar') %>
 
 
   <!-- ===== PAGE HEADER ===== -->
@@ -523,9 +561,23 @@
         <span class="badge-count" id="productCount">0 sản phẩm</span>
       </div>
     </div>
-    <a href="/products/create" class="btn-add-product">
-      ＋ Thêm sản phẩm
-    </a>
+    <div style="display: flex; gap: 12px;">
+      <a href="/categories" class="btn-add-category">
+        📂 Loại hàng
+      </a>
+      <a href="/products/create" class="btn-add-product">
+        ＋ Thêm sản phẩm
+      </a>
+    </div>
+  </div>
+
+  <!-- ===== CATEGORY FILTER ===== -->
+  <div class="category-filter">
+    <span>Loại hàng:</span>
+    <a href="/products" class="category-chip <%= !selectedCategory ? 'active' : '' %>">Tất cả</a>
+    <% categories.forEach(cat => { %>
+      <a href="/products?category=<%= cat.id %>" class="category-chip <%= selectedCategory === cat.id ? 'active' : '' %>"><%= cat.name %></a>
+    <% }) %>
   </div>
 
   <!-- ===== TOOLBAR ===== -->

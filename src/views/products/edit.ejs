@@ -196,7 +196,8 @@
 
     .field input[type="text"],
     .field input[type="number"],
-    .field input:not([type="file"]):not([type="hidden"]) {
+    .field select,
+    .field input:not([type="file"]) {
       width: 100%;
       padding: 10px 14px;
       background: var(--surface2);
@@ -209,9 +210,18 @@
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    .field input:focus {
-      border-color: var(--border-focus);
+    .field input:focus,
+    .field select:focus {
+      border-color: rgba(79,140,255,0.5);
       box-shadow: 0 0 0 3px rgba(79,140,255,0.12);
+    }
+
+    .field select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237b82a0' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 28px;
     }
 
     .field input::placeholder { color: var(--muted); }
@@ -411,20 +421,7 @@
 <body>
 
   <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-left">
-      <button class="menu-btn" onclick="toggleMenu()">☰</button>
-      <div class="logo"><span class="logo-dot"></span> ShopPOS</div>
-      <div class="nav-links" id="navLinks">
-        <!-- <a href="/">🏠 Trang chủ</a> -->
-        <a href="/products" class="active">📦 Sản phẩm</a>
-        <a href="/imports">🧾 Nhập Hàng</a>
-        <a href="/debts">📒 Sổ nợ</a>
-        <a href="/reports">📊 Báo cáo</a>
-        <a href="/settings">⚙️ Cài đặt</a>
-      </div>
-    </div>
-  </nav>
+  <%- include('../partials/navbar') %>
 
 
   <div class="page">
@@ -468,6 +465,16 @@
               <label>Mã barcode</label>
               <!-- EJS: value="<%= product.barcode %>" -->
               <input type="text" name="barcode" value="<%= product.barcode %>" placeholder="Nhập mã vạch (tuỳ chọn)">
+            </div>
+
+            <div class="field">
+              <label>Loại hàng</label>
+              <select name="category_id">
+                <option value="">-- Chọn loại hàng --</option>
+                <% categories.forEach(cat => { %>
+                  <option value="<%= cat.id %>" <%= product.category_id === cat.id ? 'selected' : '' %>><%= cat.name %></option>
+                <% }) %>
+              </select>
             </div>
           </div>
 

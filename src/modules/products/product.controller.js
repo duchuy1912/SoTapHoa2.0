@@ -1,12 +1,23 @@
 const Product = require("./product.model");
+const Category = require("../categories/category.model");
 
 exports.getAllProducts = async (req, res) => {
-  const products = await Product.getAllWithUnits();
-  res.render("products/list", { products });
+  const categoryId = req.query.category ? parseInt(req.query.category, 10) : null;
+  const [products, categories] = await Promise.all([
+    Product.getAllWithUnits(categoryId),
+    Category.getAllCategories()
+  ]);
+
+  res.render("products/list", {
+    products,
+    categories,
+    selectedCategory: categoryId
+  });
 };
 
-exports.showCreateForm = (req, res) => {
-  res.render("products/create");
+exports.showCreateForm = async (req, res) => {
+  const categories = await Category.getAllCategories();
+  res.render("products/create", { categories });
 };
 
 exports.createProduct = async (req, res) => {
@@ -20,7 +31,7 @@ exports.createProduct = async (req, res) => {
     name,
     barcode,
     image_url,
-    category_id
+    category_id: category_id ? parseInt(category_id, 10) : null
   });
 
   for (let i = 0; i < unit_name.length; i++) {
@@ -33,32 +44,32 @@ exports.createProduct = async (req, res) => {
 
   res.redirect("/products");
 };
+
 exports.deleteProduct = async (req, res) => {
   const id = req.params.id;
-
   await Product.delete(id);
-
-  res.redirect("/");
+  res.redirect("/products");
 };
-
-
 
 // hiển thị form sửa
 exports.showEditForm = async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  res.render("products/edit", { product });
+  const [product, categories] = await Promise.all([
+    Product.findById(req.params.id),
+    Category.getAllCategories()
+  ]);
+  res.render("products/edit", { product, categories });
 };
 
 // xử lý cập nhật
 exports.updateProduct = async (req, res) => {
   const id = req.params.id;
-  const { name, barcode, unit_id = [], unit_name = [], price_sell = [] } = req.body;
+  const { name, barcode, category_id, unit_id = [], unit_name = [], price_sell = [] } = req.body;
 
   let image_url = req.body.old_image;
   if (req.file) image_url = "/uploads/products/" + req.file.filename;
 
   // 1️⃣ Update product
-  await Product.updateProduct(id, name, barcode, image_url);
+  await Product.updateProduct(id, name, barcode, category_id ? parseInt(category_id, 10) : null, image_url);
 
   const keepUnitIds = [];
 

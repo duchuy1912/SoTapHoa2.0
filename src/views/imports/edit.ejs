@@ -276,20 +276,7 @@
 </head>
 <body>
     <!-- ===== NAVBAR ===== -->
-  <nav class="navbar">
-    <div class="nav-left">
-      <button class="menu-btn" onclick="toggleMenu()">☰</button>
-      <div class="logo"><span class="logo-dot"></span> ShopPOS</div>
-      <div class="nav-links" id="navLinks">
-        <!-- <a href="/">🏠 Trang chủ</a> -->
-        <a href="/products">📦 Sản phẩm</a>
-        <a href="/imports" class="active">🧾 Nhập Hàng</a>
-        <a href="/debts">📒 Sổ nợ</a>
-        <a href="/reports">📊 Báo cáo</a>
-        <a href="/settings">⚙️ Cài đặt</a>
-      </div>
-    </div>
-  </nav>
+  <%- include('../partials/navbar') %>
 
   <div class="container">
     <div class="form-card">

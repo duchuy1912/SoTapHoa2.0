@@ -1,94 +1,3 @@
-# SoTapHoa (Website quản lý sản phẩm)
-
-## Mô tả
-Website quản lý sản phẩm đơn giản cho cửa hàng tạp hóa.
-
-## Công nghệ sử dụng
-- Node.js
-- Express.js
-- PostgreSQL
-- MVC Pattern
-
-## Cài đặt
-
-## Database 
-
-### Bảng 1: categories – Phân loại hàng
-categories
-- id (PK, SERIAL)
-- name
-- description
-- created_at
-
-CREATE TABLE categories (
-  id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
-  description TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
-### BẢNG 2: products (SẢN PHẨM GỐC)
-products
-- id (PK, SERIAL)
-- name
-- barcode
-- image_url
-- category_id (FK → categories.id)
-- created_at
-
-
-CREATE TABLE products (
-  id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
-  barcode VARCHAR(50),
-  image_url TEXT,
-  category_id INT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-  CONSTRAINT fk_category
-    FOREIGN KEY (category_id)
-    REFERENCES categories(id)
-    ON DELETE SET NULL
-);
-
-### BẢNG 3: product_units (ĐƠN VỊ + GIÁ)
-product_units
-- id (PK)
-- product_id (FK → products.id)
-- unit_name
-- quantity
-- price_sell
-- create_at
-
-CREATE TABLE product_units (
-  id SERIAL PRIMARY KEY,
-  product_id INT NOT NULL,
-  unit_name TEXT NOT NULL,
-  price_sell INT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-  CONSTRAINT fk_product
-    FOREIGN KEY (product_id)
-    REFERENCES products(id)
-    ON DELETE CASCADE
-);
-
-### BẢNG 4: debts (Nợ)
-CREATE TABLE debts (
-  id SERIAL PRIMARY KEY,
-  customer_name VARCHAR(150),
-  phone VARCHAR(20),
-  total_money NUMERIC,
-  note TEXT,
-  image_url TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-## Giao Diện
-### Sản Phẩm
-- Home
-
 # SQL Authentication - Chạy những câu lệnh này trong database
 
 ## 1. Tạo bảng users
@@ -144,3 +53,17 @@ ON CONFLICT (email) DO NOTHING;
 ```bash
 npm install bcrypt jsonwebtoken passport passport-local passport-google-oauth20 cookie-parser express-session
 ```
+
+
+## Routes Authentication
+- GET /auth/login - Trang đăng nhập
+- POST /auth/login - Xử lý đăng nhập
+- GET /auth/register - Trang đăng ký
+- POST /auth/register - Xử lý đăng ký
+- GET /auth/google - Đăng nhập với Google
+- GET /auth/google/callback - Google callback
+- GET /auth/logout - Đăng xuất
+
+## Test Login Credentials
+- Email: admin@sotaphoa.com
+- Password: admin123

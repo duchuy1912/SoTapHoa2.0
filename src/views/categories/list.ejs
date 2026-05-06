@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách loại hàng</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: rgba(255,255,255,0.08);
+      --accent: #4f8cff;
+      --accent2: #38e8b5;
+      --text: #e8eaf6;
+      --muted: #7b82a0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { min-height: 100vh; font-family: 'Be Vietnam Pro', sans-serif; background: var(--bg); color: var(--text); }
+    .page { max-width: 1080px; margin: 0 auto; padding: 28px 24px; }
+    .page-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+    .page-title { font-family: 'Sora', sans-serif; font-size: 1.7rem; font-weight: 700; }
+    .subtitle { color: var(--muted); margin-top: 8px; }
+    .card { background: #141824; border: 1px solid var(--border); border-radius: 22px; padding: 26px; box-shadow: 0 18px 60px rgba(0,0,0,0.35); }
+    .card-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    .card-title { font-size: 1.1rem; font-weight: 700; }
+    .btn-add-category { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--accent2), #26c6a0); color: #0f1117; border: none; border-radius: 999px; padding: 12px 18px; font-weight: 700; text-decoration: none; }
+    .table { width: 100%; border-collapse: collapse; }
+    .table th, .table td { padding: 14px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .table th { color: var(--muted); font-weight: 600; text-align: left; }
+    .table tr:hover { background: rgba(79,140,255,0.08); }
+    .empty { padding: 24px; color: var(--muted); }
+    .breadcrumb { display: flex; gap: 8px; color: var(--muted); margin-bottom: 18px; font-size: 0.92rem; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+  <div class="page">
+    <div class="breadcrumb">
+      <a href="/">Trang chủ</a>
+      <span>›</span>
+      <span>Loại hàng</span>
+    </div>
+    <div class="page-header">
+      <div>
+        <div class="page-title">Danh sách loại hàng</div>
+        <div class="subtitle">Quản lý loại hàng để lọc sản phẩm theo nhóm dễ hơn.</div>
+      </div>
+      <a href="/categories/create" class="btn-add-category">＋ Thêm loại hàng</a>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Loại hàng hiện có</div>
+      </div>
+      <% if (categories.length === 0) { %>
+        <div class="empty">Chưa có loại hàng nào. Hãy tạo mới.</div>
+      <% } else { %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Tên loại hàng</th>
+              <th>Mô tả</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% categories.forEach((category, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= category.name %></td>
+                <td><%= category.description || "-" %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>
