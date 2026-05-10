@@ -54,9 +54,8 @@ app.use("/debts", authMiddleware.isAuthenticated, debtRoute);
 app.use("/imports", authMiddleware.isAuthenticated, importRoutes);
 app.use("/reports", authMiddleware.isAuthenticated, reportRoutes);
 console.log("Loading import routes...");
-app.listen(3000, () => {
-  console.log("Server chạy tại http://localhost:3000");
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server chạy tại http://localhost:${PORT}`);
 });
-// app.listen(3000, '192.168.1.29', () => {
-//   console.log("Server chạy tại http://192.168.1.29");
-// });

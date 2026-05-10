@@ -1,41 +1,88 @@
 <style>
-  * {
-    box-sizing: border-box;
+  :root {
+    --nav-bg: rgba(9, 9, 11, 0.7);
+    --nav-blur: blur(16px);
+    --nav-border: rgba(255, 255, 255, 0.08);
+    --nav-text: #a1a1aa;
+    --nav-text-hover: #f4f4f5;
+    --nav-accent: #6366f1;
+    --nav-surface: rgba(39, 39, 42, 0.8);
   }
 
   .navbar {
-    background: linear-gradient(90deg, #1f2933, #111827);
-    padding: 12px 20px;
+    background: var(--nav-bg);
+    backdrop-filter: var(--nav-blur);
+    -webkit-backdrop-filter: var(--nav-blur);
+    padding: 0 36px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: #fff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid var(--nav-border);
+    font-family: 'Be Vietnam Pro', sans-serif;
   }
 
+  .nav-left { display: flex; align-items: center; gap: 8px; }
+
   .logo {
-    font-size: 18px;
-    font-weight: bold;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    background: linear-gradient(135deg, #fff, #a1a1aa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+    margin-right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .logo-dot {
+    width: 10px; height: 10px;
+    background: var(--nav-accent);
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 12px var(--nav-accent);
   }
 
   .nav-links {
     display: flex;
-    gap: 16px;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
   }
 
   .nav-links a {
-    color: #e5e7eb;
+    color: var(--nav-text);
     text-decoration: none;
-    font-weight: 600;
-    padding: 8px 14px;
-    border-radius: 6px;
-    transition: all 0.25s ease;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   .nav-links a:hover {
-    background: #f59e0b;
-    color: #111;
-    transform: translateY(-2px);
+    background: var(--nav-surface);
+    color: var(--nav-text-hover);
+    transform: translateY(-1px);
+  }
+
+  .nav-links a.active {
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--nav-accent);
+  }
+
+  .nav-links ion-icon {
+    font-size: 1.15rem;
   }
 
   .nav-actions {
@@ -46,16 +93,23 @@
   }
 
   .user-avatar-link {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.14);
-    background: #111827;
+    border: 2px solid var(--nav-border);
+    background: #18181b;
     cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .user-avatar-link:hover {
+    border-color: var(--nav-accent);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+    transform: scale(1.05);
   }
 
   .user-avatar-link img {
@@ -68,17 +122,18 @@
   .user-dropdown {
     position: absolute;
     right: 0;
-    top: 58px;
-    min-width: 180px;
-    background: rgba(15, 23, 42, 0.98);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 14px;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    top: 56px;
+    min-width: 220px;
+    background: rgba(24, 24, 27, 0.95);
+    backdrop-filter: var(--nav-blur);
+    border: 1px solid var(--nav-border);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
     overflow: hidden;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 100;
   }
 
@@ -89,87 +144,140 @@
   }
 
   .user-dropdown a {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 12px 16px;
-    color: #f8fafc;
+    color: var(--nav-text-hover);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 500;
+    font-size: 0.9rem;
     transition: background 0.2s ease;
   }
 
   .user-dropdown a:hover {
     background: rgba(255, 255, 255, 0.08);
+    color: #ef4444;
   }
 
   .user-dropdown-header {
-    padding: 14px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    color: #cbd5e1;
+    padding: 16px;
+    border-bottom: 1px solid var(--nav-border);
+    color: var(--nav-text);
   }
 
-  /* Nút menu mobile */
+  .user-dropdown-header strong {
+    color: var(--nav-text-hover);
+    font-family: 'Sora', sans-serif;
+    font-size: 0.95rem;
+  }
+
+  .user-dropdown-header span {
+    font-size: 0.8rem;
+    opacity: 0.8;
+  }
+
+  .logout-btn {
+    background: linear-gradient(135deg, var(--nav-accent), #4f46e5);
+    color: #fff !important;
+    padding: 8px 20px !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    transition: all 0.3s ease;
+  }
+  .logout-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+  }
+
   .menu-btn {
-    font-size: 24px;
+    font-size: 28px;
     cursor: pointer;
     display: none;
+    color: var(--nav-text-hover);
+    background: none;
+    border: none;
+    padding: 4px;
+    align-items: center;
+    justify-content: center;
   }
 
-  /* ===== Responsive ===== */
   @media (max-width: 768px) {
+    .navbar {
+      padding: 0 20px;
+    }
+
+    .nav-links { display: none; }
+
     .menu-btn {
-      display: block;
+      display: flex;
+      order: -1;
     }
-
-    .nav-links {
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      background: #111827;
-      flex-direction: column;
-      width: 200px;
-      padding: 12px;
-      border-radius: 8px;
-      display: none;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    .nav-links a {
-      padding: 10px;
+    
+    .logo {
+      margin: 0 auto 0 12px;
+      font-size: 1.1rem;
     }
 
     .nav-links.show {
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: rgba(9, 9, 11, 0.98);
+      backdrop-filter: var(--nav-blur);
+      flex-direction: column;
+      padding: 16px 20px;
       display: flex;
+      border-bottom: 1px solid var(--nav-border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      align-items: stretch;
+      gap: 4px;
+    }
+
+    .nav-links.show a {
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+    }
+    
+    .nav-links.show a:hover {
+      background: rgba(255, 255, 255, 0.05);
     }
   }
 </style>
 
 <div class="navbar">
-  <div class="logo">
-    🛒 Quản lý
-  </div>
+  <button class="menu-btn" onclick="toggleMenu()"><ion-icon name="menu-outline"></ion-icon></button>
 
-  <span class="menu-btn" onclick="toggleMenu()">☰</span>
+  <a href="/" class="logo">
+    <div class="logo-dot"></div> Quản lý
+  </a>
 
   <div class="nav-links" id="navLinks">
-    <a href="/">🏠 Sản phẩm</a>
-    <!-- <a href="/products/create">➕ Thêm hàng</a> -->
-    <a href="/imports">📦 Nhập hàng</a>
-    <a href="/reports">📊 Báo cáo</a>
-    <a href="/debts">📒 Ghi nợ</a>
+    <a href="/"><ion-icon name="cube-outline"></ion-icon> Sản phẩm</a>
+    <a href="/imports"><ion-icon name="download-outline"></ion-icon> Nhập hàng</a>
+    <a href="/reports"><ion-icon name="bar-chart-outline"></ion-icon> Báo cáo</a>
+    <a href="/debts"><ion-icon name="book-outline"></ion-icon> Ghi nợ</a>
   </div>
 
   <div class="nav-actions">
-    <% const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='20' fill='%234f8cff'/%3E%3Ccircle cx='60' cy='44' r='22' fill='%23fff'/%3E%3Cpath d='M30 97c0-18 14-32 30-32s30 14 30 32' fill='none' stroke='%23fff' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E"; %>
-    <% if (user) { %>
+    <% const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='20' fill='%236366f1'/%3E%3Ccircle cx='60' cy='44' r='22' fill='%23fff'/%3E%3Cpath d='M30 97c0-18 14-32 30-32s30 14 30 32' fill='none' stroke='%23fff' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E"; %>
+    <% if (typeof user !== 'undefined' && user) { %>
       <div class="user-avatar-link" onclick="toggleUserDropdown()" title="<%= user.full_name || user.email %>">
-        <img src="<%= user.avatar_url || defaultAvatar %>" alt="Avatar">
+        <img src="<%= user.avatar_url || defaultAvatar %>" alt="Avatar" onerror="this.src='<%= defaultAvatar %>'">
       </div>
       <div class="user-dropdown" id="userDropdown">
         <div class="user-dropdown-header">
           <strong><%= user.full_name || user.email %></strong><br>
           <span><%= user.email %></span>
         </div>
-        <a href="/auth/logout">Đăng xuất</a>
+        <a href="/auth/logout"><ion-icon name="log-out-outline" style="color: #ef4444; font-size: 1.2rem;"></ion-icon> Đăng xuất</a>
       </div>
     <% } else { %>
       <a href="/auth/login" class="logout-btn">Đăng nhập</a>
@@ -185,7 +293,7 @@
 
   function toggleUserDropdown() {
     const dropdown = document.getElementById('userDropdown');
-    dropdown.classList.toggle('show');
+    if(dropdown) dropdown.classList.toggle('show');
   }
 
   document.addEventListener('click', function(event) {
@@ -196,4 +304,21 @@
       dropdown.classList.remove('show');
     }
   });
+
+  // Active state logic
+  document.addEventListener("DOMContentLoaded", () => {
+    const currentPath = window.location.pathname;
+    const links = document.querySelectorAll('.nav-links a');
+    links.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href === '/' && currentPath === '/') {
+        link.classList.add('active');
+      } else if (href !== '/' && currentPath.startsWith(href)) {
+        link.classList.add('active');
+      }
+    });
+  });
 </script>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

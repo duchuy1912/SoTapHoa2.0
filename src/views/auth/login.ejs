@@ -8,23 +8,30 @@
 
   <style>
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface2: #22263a;
-      --border: rgba(255,255,255,0.07);
-      --border-focus: rgba(79,140,255,0.5);
-      --accent: #4f8cff;
-      --accent2: #38e8b5;
-      --danger: #ff5757;
-      --text: #e8eaf6;
-      --muted: #7b82a0;
+      --bg: #09090b;
+      --surface: rgba(24, 24, 27, 0.65);
+      --surface2: rgba(39, 39, 42, 0.8);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.5);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent2: #10b981;
+      --danger: #ef4444;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --card-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      --glass-blur: blur(20px);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Be Vietnam Pro', sans-serif;
-      background: linear-gradient(135deg, #0f1117 0%, #1a1d27 100%);
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.12), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.12), transparent 25%);
+      background-attachment: fixed;
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -34,28 +41,47 @@
 
     .login-container {
       width: 100%;
-      max-width: 400px;
-      padding: 20px;
+      max-width: 420px;
+      padding: 24px;
+      position: relative;
     }
 
     .login-card {
       background: var(--surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px 24px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border-radius: 24px;
+      padding: 40px 32px;
+      box-shadow: var(--card-shadow);
+      animation: fade-in-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .login-header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 32px;
     }
 
     .login-header h1 {
-      font-size: 1.8rem;
+      font-family: 'Sora', sans-serif;
+      font-size: 2rem;
       font-weight: 700;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .login-header h1 ion-icon {
       color: var(--accent);
+      font-size: 2.4rem;
     }
 
     .login-header p {
@@ -64,94 +90,110 @@
     }
 
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 6px;
-      font-weight: 500;
+      margin-bottom: 8px;
+      font-weight: 600;
       font-size: 0.9rem;
       color: var(--text);
     }
 
     .form-group input {
       width: 100%;
-      padding: 10px 12px;
-      background: var(--surface2);
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.2);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 12px;
       color: var(--text);
       font-family: inherit;
       font-size: 0.95rem;
-      transition: border-color 0.2s;
+      transition: all 0.3s ease;
     }
 
     .form-group input:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--border-focus);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+      background: rgba(24, 24, 27, 0.8);
     }
 
     .form-options {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       font-size: 0.9rem;
     }
 
     .remember-me {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       color: var(--muted);
       cursor: pointer;
+      font-weight: 500;
     }
 
     .remember-me input {
       cursor: pointer;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
     }
 
     .forgot-password {
       color: var(--accent);
       text-decoration: none;
-      transition: color 0.2s;
+      font-weight: 600;
+      transition: color 0.3s;
     }
 
     .forgot-password:hover {
-      color: var(--accent2);
+      color: var(--accent-hover);
+      text-decoration: underline;
     }
 
     .login-btn {
       width: 100%;
-      padding: 12px;
-      background: var(--accent);
+      padding: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
+      font-family: 'Sora', sans-serif;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 1.05rem;
       cursor: pointer;
-      transition: background 0.2s;
-      margin-bottom: 16px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .login-btn:hover {
-      background: #3d6bd4;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
     }
 
     .login-btn:active {
-      transform: translateY(1px);
+      transform: translateY(0);
     }
 
     .divider {
       display: flex;
       align-items: center;
-      margin: 20px 0;
+      margin: 24px 0;
       gap: 12px;
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
     }
 
     .divider::before,
@@ -159,48 +201,54 @@
       content: "";
       flex: 1;
       height: 1px;
-      background: var(--border);
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
     }
 
     .social-login {
       display: flex;
       gap: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
     .social-btn {
       flex: 1;
-      padding: 10px;
-      background: var(--surface2);
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 12px;
       color: var(--text);
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
     }
 
     .social-btn:hover {
-      background: var(--border);
-      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .social-btn ion-icon {
+      font-size: 1.2rem;
     }
 
     .register-link {
       text-align: center;
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
     }
 
     .register-link a {
       color: var(--accent);
       text-decoration: none;
       font-weight: 600;
+      margin-left: 4px;
     }
 
     .register-link a:hover {
@@ -208,22 +256,25 @@
     }
 
     .error-message {
-      background: rgba(255, 87, 87, 0.1);
-      border: 1px solid var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
       color: var(--danger);
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 24px;
       font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     @media (max-width: 480px) {
       .login-card {
-        padding: 24px 16px;
+        padding: 32px 24px;
       }
 
       .login-header h1 {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
       }
     }
   </style>
@@ -232,12 +283,15 @@
   <div class="login-container">
     <div class="login-card">
       <div class="login-header">
-        <h1>🔐 Đăng Nhập</h1>
-        <p>Chào mừng bạn quay lại ShopPOS</p>
+        <h1><ion-icon name="lock-closed"></ion-icon> Đăng Nhập</h1>
+        <p>Chào mừng bạn quay lại SoTapHoa</p>
       </div>
 
-      <% if (error) { %>
-      <div class="error-message"><%= error %></div>
+      <% if (typeof error !== 'undefined' && error) { %>
+      <div class="error-message">
+        <ion-icon name="alert-circle" style="font-size: 1.2rem;"></ion-icon>
+        <%= error %>
+      </div>
       <% } %>
 
       <form method="POST" action="/auth/login">
@@ -259,16 +313,16 @@
           <a href="#" class="forgot-password">Quên mật khẩu?</a>
         </div>
 
-        <button type="submit" class="login-btn">🔓 Đăng Nhập</button>
+        <button type="submit" class="login-btn">
+          Đăng Nhập <ion-icon name="log-in-outline"></ion-icon>
+        </button>
       </form>
 
-      <div class="divider">
-        hoặc tiếp tục với
-      </div>
+      <div class="divider">hoặc tiếp tục với</div>
 
       <div class="social-login">
         <a href="/auth/google" class="social-btn">
-          <span><ion-icon name="logo-google"></ion-icon></span> Google
+          <ion-icon name="logo-google"></ion-icon> Google
         </a>
       </div>
 
@@ -278,6 +332,6 @@
     </div>
   </div>
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
