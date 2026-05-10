@@ -6,167 +6,222 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Flatpickr for beautiful date picker -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
 
   <style>
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface2: #22263a;
-      --border: rgba(255,255,255,0.07);
-      --accent: #4f8cff;
-      --accent2: #38e8b5;
-      --danger: #ff5757;
-      --text: #e8eaf6;
-      --muted: #7b82a0;
+      --bg: #09090b;
+      --surface: rgba(24, 24, 27, 0.65);
+      --surface2: rgba(39, 39, 42, 0.8);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.5);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent2: #10b981;
+      --danger: #ef4444;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --glass-blur: blur(16px);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Be Vietnam Pro', sans-serif;
-      background: var(--bg);
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.12), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.12), transparent 25%);
+      background-attachment: fixed;
       color: var(--text);
       min-height: 100vh;
     }
 
-    /* ===== NAVBAR ===== */
-    .navbar {
-      background: rgba(26, 29, 39, 0.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      padding: 0 36px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 1px solid var(--border);
+    ion-icon {
+      font-size: 1.2em;
+      --ionicon-stroke-width: 40px;
+      vertical-align: text-bottom;
     }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo {
-      font-family: 'Sora', sans-serif;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: var(--accent);
-      letter-spacing: -0.3px;
-      margin-right: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo-dot {
-      width: 8px; height: 8px;
-      background: var(--accent2);
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.88rem;
-      padding: 6px 14px;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-
-    .nav-links a:hover {
-      background: var(--surface2);
-      color: var(--text);
-    }
-
-    .nav-links a.active {
-      background: rgba(79,140,255,0.15);
-      color: var(--accent);
-    }
-
-    .menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--text);
-      font-size: 22px;
-      cursor: pointer;
-      padding: 4px;
-    }
-
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 24px 36px;
+      padding: 32px 36px 64px;
     }
 
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 24px;
+      margin-bottom: 32px;
     }
 
-    .title { font-size: 1.5rem; font-weight: 600; }
+    .title { 
+      font-family: 'Sora', sans-serif;
+      font-size: 1.8rem; 
+      font-weight: 700; 
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
     .filters {
       background: var(--surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 24px;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 32px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 20px;
+      align-items: flex-end;
+      box-shadow: var(--card-shadow);
+      animation: fade-in-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .filter-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
 
     .filter-group label {
-      font-weight: 500;
+      font-weight: 600;
       font-size: 0.9rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .filter-group input, .filter-group select {
-      padding: 8px 10px;
-      background: var(--surface2);
+    .date-input-wrap {
+      position: relative;
+    }
+
+    .date-input-wrap ion-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-45%);
+      color: var(--muted);
+      font-size: 1.2rem;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .filter-group input {
+      width: 100%;
+      padding: 12px 16px 12px 46px;
+      background: rgba(0, 0, 0, 0.2);
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 12px;
       color: var(--text);
       font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
     }
 
     .filter-group input:focus {
       outline: none;
       border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+      background: rgba(24, 24, 27, 0.8);
     }
 
     .filter-btn {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
       color: white;
       border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
+      padding: 12px 24px;
+      border-radius: 12px;
       cursor: pointer;
-      align-self: flex-end;
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+      height: 46px;
+    }
+
+    .filter-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Override Flatpickr */
+    .flatpickr-calendar {
+      background: rgba(24, 24, 27, 0.95) !important;
+      backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6) !important;
+      border-radius: 16px !important;
+      font-family: 'Be Vietnam Pro', sans-serif !important;
+      width: 320px !important;
+      padding-bottom: 8px !important;
+    }
+    
+    .flatpickr-innerContainer {
+      width: 100% !important;
+    }
+    
+    .flatpickr-rContainer {
+      width: 100% !important;
+    }
+    
+    .flatpickr-days {
+      width: 100% !important;
+    }
+    
+    .dayContainer {
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    .flatpickr-months .flatpickr-month {
+      height: 46px !important;
+    }
+
+    .flatpickr-current-month {
+      font-size: 1.1rem !important;
+      font-weight: 600 !important;
+      padding-top: 8px !important;
+      width: 100% !important;
+      left: 0 !important;
+    }
+    
+    span.flatpickr-weekday {
+      font-weight: 600 !important;
+      color: var(--muted) !important;
+    }
+
+    .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
+      background: var(--accent) !important;
+      border-color: var(--accent) !important;
+      font-weight: 600;
+    }
+    
+    .flatpickr-day:hover {
+      background: rgba(255,255,255,0.1) !important;
+      border-color: transparent !important;
+    }
+    
+    .flatpickr-day {
+      border-radius: 8px !important;
     }
 
     .stats-grid {
@@ -197,29 +252,44 @@
 
     .tabs {
       display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
+      gap: 12px;
+      margin-bottom: 32px;
       border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      overflow-x: auto;
     }
 
     .tab {
-      padding: 12px 16px;
+      padding: 12px 20px;
       background: none;
       border: none;
       color: var(--muted);
       cursor: pointer;
-      font-weight: 500;
-      border-bottom: 2px solid transparent;
-      transition: all 0.2s;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-radius: 12px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .tab:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
     }
 
     .tab.active {
+      background: rgba(99, 102, 241, 0.15);
       color: var(--accent);
-      border-bottom-color: var(--accent);
+      box-shadow: inset 0 -2px 0 var(--accent);
+      border-radius: 12px 12px 0 0;
     }
 
     .tab-content {
       display: none;
+      animation: fade-in-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
     }
 
     .tab-content.active {
@@ -228,49 +298,89 @@
 
     .card {
       background: var(--surface);
+      backdrop-filter: var(--glass-blur);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .card h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.4rem;
       margin-bottom: 16px;
+    }
+
+    .card h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
     }
 
     .table th {
-      background: var(--surface2);
-      padding: 12px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 14px 16px;
       text-align: left;
       font-weight: 600;
-      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
+    
+    .table th:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+    .table th:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
 
     .table td {
-      padding: 12px;
+      padding: 16px;
       border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
     }
 
-    .table tr:hover {
-      background: var(--surface2);
-    }
+    .table tr:last-child td { border-bottom: none; }
 
-    .chart-container {
-      position: relative;
-      height: 300px;
-      margin-bottom: 24px;
+    .table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
     }
 
     .export-btn {
-      background: var(--accent2);
-      color: var(--bg);
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 20px;
+      border-radius: 10px;
       cursor: pointer;
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 0.9rem;
       margin-bottom: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .export-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 20px; }
+      .filters { grid-template-columns: 1fr; gap: 16px; }
+      .filter-btn { width: 100%; justify-content: center; }
+      .table { display: block; overflow-x: auto; }
+      .top-lists { grid-template-columns: 1fr !important; }
     }
   </style>
 </head>
@@ -280,50 +390,54 @@
 
   <div class="container">
     <div class="header">
-      <h1 class="title">📊 Báo cáo nhập hàng</h1>
+      <h1 class="title"><ion-icon name="stats-chart"></ion-icon> Báo cáo nhập hàng</h1>
     </div>
 
     <!-- Filters -->
     <div class="filters">
       <div class="filter-group">
-        <label>Từ ngày</label>
-        <input type="date" id="startDate" value="<%= startDate %>">
+        <label><ion-icon name="calendar-outline"></ion-icon> Từ ngày</label>
+        <div class="date-input-wrap">
+          <ion-icon name="calendar-number-outline"></ion-icon>
+          <input type="text" id="startDate" class="date-picker" value="<%= startDate %>" placeholder="Chọn ngày bắt đầu...">
+        </div>
       </div>
       <div class="filter-group">
-        <label>Đến ngày</label>
-        <input type="date" id="endDate" value="<%= endDate %>">
+        <label><ion-icon name="calendar-outline"></ion-icon> Đến ngày</label>
+        <div class="date-input-wrap">
+          <ion-icon name="calendar-number-outline"></ion-icon>
+          <input type="text" id="endDate" class="date-picker" value="<%= endDate %>" placeholder="Chọn ngày kết thúc...">
+        </div>
       </div>
       <div class="filter-group">
-        <label>&nbsp;</label>
-        <button class="filter-btn" onclick="applyFilter()">🔍 Lọc dữ liệu</button>
+        <button class="filter-btn" onclick="applyFilter()">
+          <ion-icon name="funnel-outline"></ion-icon> Lọc dữ liệu
+        </button>
       </div>
     </div>
-
-    <!-- Overall Stats -->
-
 
     <!-- Tabs -->
     <div class="tabs">
       <button class="tab <%= currentType === 'supplier' ? 'active' : '' %>" onclick="switchTab('supplier')">
-        🏢 Theo nhà cung cấp
+        <ion-icon name="business-outline"></ion-icon> Theo nhà cung cấp
       </button>
       <button class="tab <%= currentType === 'product' ? 'active' : '' %>" onclick="switchTab('product')">
-        📦 Theo sản phẩm
+        <ion-icon name="cube-outline"></ion-icon> Theo sản phẩm
       </button>
       <button class="tab <%= currentType === 'daily' ? 'active' : '' %>" onclick="switchTab('daily')">
-        📅 Theo ngày
+        <ion-icon name="calendar-outline"></ion-icon> Theo ngày
       </button>
       <button class="tab <%= currentType === 'monthly' ? 'active' : '' %>" onclick="switchTab('monthly')">
-        📈 Theo tháng
+        <ion-icon name="trending-up-outline"></ion-icon> Theo tháng
       </button>
     </div>
 
     <!-- Supplier Report -->
     <div class="tab-content <%= currentType === 'supplier' ? 'active' : '' %>" id="supplier-tab">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h2>Báo cáo theo nhà cung cấp</h2>
+        <h2 style="font-family:'Sora',sans-serif;font-size:1.4rem;">Báo cáo theo nhà cung cấp</h2>
         <a href="/reports/export/supplier?startDate=<%= startDate %>&endDate=<%= endDate %>" class="export-btn">
-          💾 Xuất Excel
+          <ion-icon name="download-outline"></ion-icon> Xuất Excel
         </a>
       </div>
       <% if (supplierReport && supplierReport.length > 0) { %>
@@ -344,7 +458,7 @@
             <tr>
               <td><strong><%= item.supplier_name %></strong></td>
               <td style="text-align: right;"><%= item.import_count %></td>
-              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(item.total_amount) %> đ</td>
+              <td style="text-align: right; color:var(--accent2); font-weight:600;"><%= new Intl.NumberFormat('vi-VN').format(item.total_amount) %> đ</td>
               <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(Math.round(item.avg_amount)) %> đ</td>
               <td><%= new Date(item.first_import_date).toLocaleDateString('vi-VN') %></td>
               <td><%= new Date(item.last_import_date).toLocaleDateString('vi-VN') %></td>
@@ -353,15 +467,20 @@
           </tbody>
         </table>
       </div>
+      <% } else { %>
+        <div class="card" style="text-align:center; padding: 60px 20px; color:var(--muted);">
+          <ion-icon name="document-text-outline" style="font-size:4rem; margin-bottom:16px; opacity:0.5;"></ion-icon>
+          <p>Không có dữ liệu trong khoảng thời gian này.</p>
+        </div>
       <% } %>
     </div>
 
     <!-- Product Report -->
     <div class="tab-content <%= currentType === 'product' ? 'active' : '' %>" id="product-tab">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h2>Báo cáo theo sản phẩm</h2>
+        <h2 style="font-family:'Sora',sans-serif;font-size:1.4rem;">Báo cáo theo sản phẩm</h2>
         <a href="/reports/export/product?startDate=<%= startDate %>&endDate=<%= endDate %>" class="export-btn">
-          💾 Xuất Excel
+          <ion-icon name="download-outline"></ion-icon> Xuất Excel
         </a>
       </div>
       <% if (productReport && productReport.length > 0) { %>
@@ -382,23 +501,28 @@
             <% productReport.forEach(item => { %>
             <tr>
               <td><strong><%= item.product_name %></strong></td>
-              <td><%= item.unit_name %></td>
-              <td style="text-align: right;"><%= item.total_quantity %></td>
+              <td><span style="background:rgba(255,255,255,0.1); padding:4px 8px; border-radius:6px; font-size:0.8rem;"><%= item.unit_name %></span></td>
+              <td style="text-align: right; font-weight:600;"><%= item.total_quantity %></td>
               <td style="text-align: right;"><%= item.import_times %></td>
               <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(Math.round(item.min_price_buy)) %> đ</td>
               <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(Math.round(item.max_price_buy)) %> đ</td>
-              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(item.total_cost) %> đ</td>
+              <td style="text-align: right; color:var(--accent2); font-weight:600;"><%= new Intl.NumberFormat('vi-VN').format(item.total_cost) %> đ</td>
             </tr>
             <% }) %>
           </tbody>
         </table>
       </div>
+      <% } else { %>
+        <div class="card" style="text-align:center; padding: 60px 20px; color:var(--muted);">
+          <ion-icon name="document-text-outline" style="font-size:4rem; margin-bottom:16px; opacity:0.5;"></ion-icon>
+          <p>Không có dữ liệu trong khoảng thời gian này.</p>
+        </div>
       <% } %>
     </div>
 
     <!-- Daily Report -->
     <div class="tab-content <%= currentType === 'daily' ? 'active' : '' %>" id="daily-tab">
-      <h2>Báo cáo theo ngày</h2>
+      <h2 style="font-family:'Sora',sans-serif;font-size:1.4rem; margin-bottom:16px;">Báo cáo theo ngày</h2>
       <% if (dailyReport && dailyReport.length > 0) { %>
       <div class="card">
         <table class="table">
@@ -416,18 +540,23 @@
               <td><strong><%= new Date(item.import_date).toLocaleDateString('vi-VN') %></strong></td>
               <td style="text-align: right;"><%= item.import_count %></td>
               <td style="text-align: right;"><%= item.supplier_count %></td>
-              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(item.daily_total) %> đ</td>
+              <td style="text-align: right; color:var(--accent2); font-weight:600;"><%= new Intl.NumberFormat('vi-VN').format(item.daily_total) %> đ</td>
             </tr>
             <% }) %>
           </tbody>
         </table>
       </div>
+      <% } else { %>
+        <div class="card" style="text-align:center; padding: 60px 20px; color:var(--muted);">
+          <ion-icon name="document-text-outline" style="font-size:4rem; margin-bottom:16px; opacity:0.5;"></ion-icon>
+          <p>Không có dữ liệu trong khoảng thời gian này.</p>
+        </div>
       <% } %>
     </div>
 
     <!-- Monthly Report -->
     <div class="tab-content <%= currentType === 'monthly' ? 'active' : '' %>" id="monthly-tab">
-      <h2>Báo cáo theo tháng</h2>
+      <h2 style="font-family:'Sora',sans-serif;font-size:1.4rem; margin-bottom:16px;">Báo cáo theo tháng</h2>
       <% if (monthlyReport && monthlyReport.length > 0) { %>
       <div class="card">
         <table class="table">
@@ -443,24 +572,29 @@
           <tbody>
             <% monthlyReport.forEach(item => { %>
             <tr>
-              <td><strong><%= new Date(item.month).toLocaleDateString('vi-VN', {month: 'long', year: 'numeric'}) %></strong></td>
+              <td><strong style="text-transform:capitalize;"><%= new Date(item.month).toLocaleDateString('vi-VN', {month: 'long', year: 'numeric'}) %></strong></td>
               <td style="text-align: right;"><%= item.import_count %></td>
               <td style="text-align: right;"><%= item.supplier_count %></td>
-              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(item.monthly_total) %> đ</td>
+              <td style="text-align: right; color:var(--accent2); font-weight:600;"><%= new Intl.NumberFormat('vi-VN').format(item.monthly_total) %> đ</td>
               <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(Math.round(item.avg_import_value)) %> đ</td>
             </tr>
             <% }) %>
           </tbody>
         </table>
       </div>
+      <% } else { %>
+        <div class="card" style="text-align:center; padding: 60px 20px; color:var(--muted);">
+          <ion-icon name="document-text-outline" style="font-size:4rem; margin-bottom:16px; opacity:0.5;"></ion-icon>
+          <p>Không có dữ liệu trong khoảng thời gian này.</p>
+        </div>
       <% } %>
     </div>
 
     <!-- Top Suppliers & Products -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+    <div class="top-lists" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
       <% if (topSuppliers && topSuppliers.length > 0) { %>
       <div class="card">
-        <h3>🏆 Top 10 Nhà cung cấp</h3>
+        <h3><ion-icon name="trophy-outline" style="color: #f59e0b;"></ion-icon> Top 10 Nhà cung cấp</h3>
         <table class="table">
           <thead>
             <tr>
@@ -471,8 +605,13 @@
           <tbody>
             <% topSuppliers.forEach((item, idx) => { %>
             <tr>
-              <td><strong><%= idx + 1 %>. <%= item.supplier_name %></strong></td>
-              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(item.total_amount) %> đ</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span style="width:24px; height:24px; background:rgba(255,255,255,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold;"><%= idx + 1 %></span>
+                  <strong><%= item.supplier_name %></strong>
+                </div>
+              </td>
+              <td style="text-align: right; color:var(--accent2); font-weight:600;"><%= new Intl.NumberFormat('vi-VN').format(item.total_amount) %> đ</td>
             </tr>
             <% }) %>
           </tbody>
@@ -482,7 +621,7 @@
 
       <% if (topProducts && topProducts.length > 0) { %>
       <div class="card">
-        <h3>🏆 Top 10 Sản phẩm</h3>
+        <h3><ion-icon name="trophy-outline" style="color: #f59e0b;"></ion-icon> Top 10 Sản phẩm</h3>
         <table class="table">
           <thead>
             <tr>
@@ -493,8 +632,13 @@
           <tbody>
             <% topProducts.forEach((item, idx) => { %>
             <tr>
-              <td><strong><%= idx + 1 %>. <%= item.name %></strong></td>
-              <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(item.total_cost) %> đ</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span style="width:24px; height:24px; background:rgba(255,255,255,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold;"><%= idx + 1 %></span>
+                  <strong><%= item.name %></strong>
+                </div>
+              </td>
+              <td style="text-align: right; color:var(--accent2); font-weight:600;"><%= new Intl.NumberFormat('vi-VN').format(item.total_cost) %> đ</td>
             </tr>
             <% }) %>
           </tbody>
@@ -504,7 +648,19 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+
   <script>
+    // Initialize beautiful date picker
+    flatpickr(".date-picker", {
+      locale: "vn",
+      dateFormat: "Y-m-d",
+      altInput: true,
+      altFormat: "d/m/Y",
+      allowInput: true
+    });
+
     function switchTab(type) {
       // Hide all tabs
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -516,6 +672,7 @@
     }
 
     function applyFilter() {
+      // flatpickr creates hidden inputs, so we read the actual values or the hidden input's value
       const startDate = document.getElementById('startDate').value;
       const endDate = document.getElementById('endDate').value;
       const type = document.querySelector('.tab.active').textContent.includes('nhà cung cấp') ? 'supplier' :

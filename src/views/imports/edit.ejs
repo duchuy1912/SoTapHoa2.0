@@ -10,267 +10,314 @@
 
   <style>
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface2: #22263a;
-      --border: rgba(255,255,255,0.07);
-      --border-focus: rgba(79,140,255,0.5);
-      --accent: #4f8cff;
-      --accent2: #38e8b5;
-      --danger: #ff5757;
-      --text: #e8eaf6;
-      --muted: #7b82a0;
+      --bg: #09090b;
+      --surface: rgba(24, 24, 27, 0.65);
+      --surface2: rgba(39, 39, 42, 0.8);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.5);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent2: #10b981;
+      --danger: #ef4444;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --glass-blur: blur(16px);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Be Vietnam Pro', sans-serif;
-      background: var(--bg);
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.12), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.12), transparent 25%);
+      background-attachment: fixed;
       color: var(--text);
       min-height: 100vh;
     }
 
-    /* ===== NAVBAR ===== */
-    .navbar {
-      background: rgba(26, 29, 39, 0.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      padding: 0 36px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo {
-      font-family: 'Sora', sans-serif;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: var(--accent);
-      letter-spacing: -0.3px;
-      margin-right: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo-dot {
-      width: 8px; height: 8px;
-      background: var(--accent2);
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.88rem;
-      padding: 6px 14px;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-
-    .nav-links a:hover {
-      background: var(--surface2);
-      color: var(--text);
-    }
-
-    .nav-links a.active {
-      background: rgba(79,140,255,0.15);
-      color: var(--accent);
-    }
-
-    .menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--text);
-      font-size: 22px;
-      cursor: pointer;
-      padding: 4px;
+    ion-icon {
+      font-size: 1.2em;
+      --ionicon-stroke-width: 40px;
+      vertical-align: text-bottom;
     }
 
     .container {
-      /* max-width: 800px; */
+      max-width: 900px;
       margin: 0 auto;
-      padding: 24px 36px;
+      padding: 32px 24px 64px;
     }
 
     .form-card {
       background: var(--surface);
-      border-radius: 12px;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: 20px;
       border: 1px solid var(--border);
-      padding: 24px;
+      padding: 32px;
+      box-shadow: var(--card-shadow);
+      animation: fade-in-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      color: var(--text);
     }
 
     .section {
-      margin-bottom: 24px;
+      margin-bottom: 32px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .section-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.1rem;
       font-weight: 600;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .field {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .field label {
-      display: block;
-      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
       font-weight: 500;
+      color: var(--muted);
+      font-size: 0.95rem;
     }
 
     .field input, .field select, .field textarea {
       width: 100%;
-      padding: 10px 12px;
-      background: var(--surface2);
+      padding: 12px 16px;
+      background: rgba(24, 24, 27, 0.6);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 12px;
       color: var(--text);
       font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s;
     }
 
     .field input:focus, .field select:focus, .field textarea:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+      background: rgba(24, 24, 27, 0.9);
     }
 
     .item-row {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr auto;
-      gap: 12px;
-      align-items: end;
-      margin-bottom: 12px;
-      padding: 12px;
-      background: var(--surface2);
-      border-radius: 8px;
+      grid-template-columns: 2.5fr 1.5fr 1fr 1.5fr auto;
+      gap: 16px;
+      align-items: start;
+      margin-bottom: 16px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .item-row:hover {
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .item-row select, .item-row input {
-      padding: 8px 10px;
-      background: var(--bg);
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.3);
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 8px;
       color: var(--text);
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    
+    .item-row select:focus, .item-row input:focus {
+      border-color: var(--accent);
+      outline: none;
     }
 
     .btn-remove {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: all 0.2s;
+    }
+    
+    .btn-remove:hover {
       background: var(--danger);
       color: white;
-      border: none;
-      padding: 8px;
-      border-radius: 6px;
-      cursor: pointer;
     }
 
     .btn-add {
-      background: var(--accent2);
-      color: var(--bg);
-      border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent2);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 12px 20px;
+      border-radius: 10px;
       cursor: pointer;
-      font-weight: 500;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      width: 100%;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    
+    .btn-add:hover {
+      background: var(--accent2);
+      color: #09090b;
     }
 
     .form-actions {
       display: flex;
-      justify-content: space-between;
-      margin-top: 24px;
+      justify-content: flex-end;
+      gap: 16px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
     }
 
     .btn-back {
-      background: var(--muted);
+      background: rgba(255, 255, 255, 0.05);
       color: var(--text);
       text-decoration: none;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-weight: 500;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+    }
+    
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .btn-save {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
       color: white;
       border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-weight: 500;
+      padding: 12px 32px;
+      border-radius: 12px;
+      font-weight: 600;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+      transition: all 0.3s;
     }
-  </style>
+    
+    .btn-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
 
-  <!-- Tom Select Custom Styles -->
-  <style>
+    /* ===== TOM SELECT OVERRIDES ===== */
     .ts-wrapper {
-      background: var(--surface2) !important;
+      background: rgba(0, 0, 0, 0.3) !important;
       border: 1px solid var(--border) !important;
       border-radius: 8px !important;
     }
 
     .ts-wrapper.focus {
       border-color: var(--accent) !important;
-      box-shadow: 0 0 0 2px var(--border-focus) !important;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
     }
 
     .ts-control {
-      background: var(--surface2) !important;
+      background: transparent !important;
       color: var(--text) !important;
       border: none !important;
-      padding: 8px 10px !important;
-      border-radius: 6px !important;
+      padding: 10px 12px !important;
+      border-radius: 8px !important;
     }
 
     .ts-control input {
       color: var(--text) !important;
+      font-family: 'Be Vietnam Pro', sans-serif !important;
+      font-size: 0.95rem !important;
     }
 
     .ts-dropdown {
-      background: var(--surface) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 8px !important;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.35) !important;
+      background: rgba(24, 24, 27, 0.95) !important;
+      backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 12px !important;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5) !important;
+      margin-top: 8px !important;
+      padding: 8px !important;
     }
 
     .ts-dropdown .option {
       color: var(--text) !important;
-      padding: 8px 12px !important;
+      padding: 10px 14px !important;
+      border-radius: 8px !important;
+      transition: background 0.2s !important;
+      font-family: 'Be Vietnam Pro', sans-serif !important;
     }
 
     .ts-dropdown .option:hover {
-      background: var(--surface2) !important;
+      background: rgba(255, 255, 255, 0.05) !important;
     }
 
     .ts-dropdown .active {
-      background: rgba(79,140,255,0.15) !important;
+      background: rgba(99, 102, 241, 0.2) !important;
       color: var(--accent) !important;
     }
 
     .ts-wrapper .ts-control > .item {
-      background: var(--accent) !important;
-      color: white !important;
-      border-radius: 4px !important;
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: var(--text) !important;
+      border-radius: 6px !important;
+      padding: 2px 8px !important;
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 20px; }
+      .form-card { padding: 20px; }
+      .item-row { grid-template-columns: 1fr; gap: 12px; position: relative; padding-top: 40px; }
+      .btn-remove { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; }
+      .form-actions { flex-direction: column-reverse; }
+      .btn-back, .btn-save { width: 100%; justify-content: center; }
     }
   </style>
 </head>
@@ -280,39 +327,39 @@
 
   <div class="container">
     <div class="form-card">
-      <h1 style="margin-bottom: 24px;">📦 Sửa nhập hàng</h1>
+      <h1 class="page-title"><ion-icon name="create-outline" style="color: var(--accent);"></ion-icon> Chỉnh sửa nhập hàng</h1>
 
       <form method="POST" action="/imports/edit/<%= importData.id %>">
 
         <!-- Thông tin cơ bản -->
         <div class="section">
-          <div class="section-title">Thông tin nhập hàng</div>
+          <div class="section-title"><ion-icon name="information-circle-outline"></ion-icon> Thông tin cơ bản</div>
 
           <div class="field">
-            <label>Tên nhà cung cấp <span style="color: var(--danger);">*</span></label>
+            <label><ion-icon name="business-outline"></ion-icon> Tên nhà cung cấp <span style="color: var(--danger);">*</span></label>
             <input type="text" name="supplier_name" value="<%= importData.supplier_name %>" placeholder="VD: Công ty TNHH ABC" required>
           </div>
 
           <div class="field">
-            <label>Ngày nhập <span style="color: var(--danger);">*</span></label>
+            <label><ion-icon name="calendar-outline"></ion-icon> Ngày nhập <span style="color: var(--danger);">*</span></label>
             <input type="date" name="import_date" value="<%= new Date(importData.import_date).toISOString().split('T')[0] %>" required>
           </div>
 
           <div class="field">
-            <label>Ghi chú</label>
-            <textarea name="note" rows="3" placeholder="Ghi chú thêm..."><%= importData.note || '' %></textarea>
+            <label><ion-icon name="document-text-outline"></ion-icon> Ghi chú</label>
+            <textarea name="note" rows="3" placeholder="Thông tin thêm về lô hàng này..."><%= importData.note || '' %></textarea>
           </div>
         </div>
 
         <!-- Danh sách sản phẩm -->
         <div class="section">
-          <div class="section-title">Danh sách sản phẩm nhập</div>
+          <div class="section-title"><ion-icon name="cube-outline"></ion-icon> Danh sách sản phẩm nhập</div>
 
           <div id="itemList">
             <% importData.items.forEach(item => { %>
             <div class="item-row">
               <select name="product_id[]" class="product-select" onchange="updateUnits(this)" required>
-                <option value="">Chọn sản phẩm</option>
+                <option value="">Tìm sản phẩm...</option>
                 <% products.forEach(product => { %>
                 <option value="<%= product.id %>" <%= product.id == item.product_id ? 'selected' : '' %>><%= product.name %></option>
                 <% }) %>
@@ -325,18 +372,22 @@
               </select>
               <input name="quantity[]" type="number" value="<%= item.quantity %>" placeholder="Số lượng" min="1" required>
               <input name="price_buy[]" type="number" value="<%= item.price_buy %>" placeholder="Giá nhập (đ)" min="0" step="0.01" required>
-              <button type="button" class="btn-remove" onclick="removeItem(this)">✕</button>
+              <button type="button" class="btn-remove" onclick="removeItem(this)" title="Xóa dòng này">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
             </div>
             <% }) %>
           </div>
 
-          <button type="button" class="btn-add" onclick="addItem()">＋ Thêm sản phẩm</button>
+          <button type="button" class="btn-add" onclick="addItem()">
+            <ion-icon name="add-outline"></ion-icon> Thêm sản phẩm khác
+          </button>
         </div>
 
         <!-- Actions -->
         <div class="form-actions">
-          <a href="/imports" class="btn-back">↩ Quay lại</a>
-          <button type="submit" class="btn-save">💾 Cập nhật</button>
+          <a href="/imports" class="btn-back"><ion-icon name="arrow-back-outline"></ion-icon> Hủy bỏ</a>
+          <button type="submit" class="btn-save"><ion-icon name="save-outline"></ion-icon> Cập nhật thông tin</button>
         </div>
 
       </form>
@@ -346,6 +397,9 @@
   <script type="application/json" id="products-data">
     <%- JSON.stringify(products) %>
   </script>
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
   <script>
     const products = JSON.parse(document.getElementById('products-data').textContent);
@@ -390,7 +444,7 @@
       const productOptions = products.map(product => `<option value="${product.id}">${product.name}</option>`).join('');
       newRow.innerHTML = `
         <select name="product_id[]" class="product-select" onchange="updateUnits(this)" required>
-          <option value="">Chọn sản phẩm</option>
+          <option value="">Tìm sản phẩm...</option>
           ${productOptions}
         </select>
         <select name="unit_id[]" required>
@@ -398,7 +452,9 @@
         </select>
         <input name="quantity[]" type="number" placeholder="Số lượng" min="1" required>
         <input name="price_buy[]" type="number" placeholder="Giá nhập (đ)" min="0" step="0.01" required>
-        <button type="button" class="btn-remove" onclick="removeItem(this)">✕</button>
+        <button type="button" class="btn-remove" onclick="removeItem(this)" title="Xóa dòng này">
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
       `;
       itemList.appendChild(newRow);
 

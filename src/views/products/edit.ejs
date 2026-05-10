@@ -8,95 +8,51 @@
 
   <style>
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface2: #22263a;
-      --border: rgba(255,255,255,0.07);
-      --border-focus: rgba(79,140,255,0.5);
-      --accent: #4f8cff;
-      --accent2: #38e8b5;
-      --danger: #ff5757;
-      --success: #22c55e;
-      --text: #e8eaf6;
-      --muted: #7b82a0;
+      --bg: #09090b;
+      --surface: rgba(24, 24, 27, 0.65);
+      --surface2: rgba(39, 39, 42, 0.8);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.5);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent2: #10b981;
+      --danger: #ef4444;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --glass-blur: blur(16px);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Be Vietnam Pro', sans-serif;
-      background: var(--bg);
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.12), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.12), transparent 25%);
+      background-attachment: fixed;
       color: var(--text);
       min-height: 100vh;
     }
 
-    /* ===== NAVBAR ===== */
-    .navbar {
-      background: rgba(26,29,39,0.92);
-      backdrop-filter: blur(14px);
-      padding: 0 36px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 1px solid var(--border);
+    ion-icon {
+      font-size: 1.2em;
+      --ionicon-stroke-width: 40px;
+      vertical-align: text-bottom;
     }
 
-    .nav-left { display: flex; align-items: center; gap: 8px; }
-
-    .logo {
-      font-family: 'Sora', sans-serif;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: var(--accent);
-      letter-spacing: -0.3px;
-      margin-right: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo-dot { width: 8px; height: 8px; background: var(--accent2); border-radius: 50%; }
-
-    .nav-links { display: flex; align-items: center; gap: 4px; }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.88rem;
-      padding: 6px 14px;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-
-    .nav-links a:hover { background: var(--surface2); color: var(--text); }
-    .nav-links a.active { background: rgba(79,140,255,0.15); color: var(--accent); }
-
-    .menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--text);
-      font-size: 22px;
-      cursor: pointer;
-    }
-
-    /* ===== PAGE WRAPPER ===== */
+    /* ===== PAGE ===== */
     .page {
       display: flex;
       justify-content: center;
-      padding: 40px 16px 60px;
+      padding: 40px 16px 64px;
     }
 
-    /* ===== CONTAINER ===== */
     .container {
       width: 100%;
-      max-width: 560px;
-      animation: fade-up 0.45s ease both;
+      max-width: 600px;
+      animation: fade-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
     }
 
     @keyframes fade-up {
@@ -104,12 +60,12 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ===== BREADCRUMB ===== */
+    /* Breadcrumb */
     .breadcrumb {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: var(--muted);
       margin-bottom: 24px;
     }
@@ -118,80 +74,73 @@
     .breadcrumb a:hover { color: var(--text); }
     .breadcrumb span { color: var(--text); }
 
-    /* ===== CARD ===== */
+    /* Card */
     .card {
       background: var(--surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
       border: 1px solid var(--border);
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 32px;
+      box-shadow: var(--card-shadow);
     }
 
     .card-header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 28px;
+      gap: 16px;
+      margin-bottom: 32px;
       padding-bottom: 20px;
       border-bottom: 1px solid var(--border);
     }
 
     .card-icon {
-      width: 44px; height: 44px;
-      background: rgba(79,140,255,0.12);
-      border: 1px solid rgba(79,140,255,0.25);
-      border-radius: 12px;
+      width: 52px; height: 52px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 28px;
+      color: var(--accent);
       flex-shrink: 0;
     }
 
     .card-title {
       font-family: 'Sora', sans-serif;
-      font-size: 1.25rem;
+      font-size: 1.4rem;
       font-weight: 700;
       color: var(--text);
     }
 
-    .card-subtitle {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 2px;
-    }
+    .card-subtitle { font-size: 0.9rem; color: var(--muted); margin-top: 4px; }
 
-    /* ===== SECTION ===== */
-    .section { margin-bottom: 24px; }
+    /* Section */
+    .section { margin-bottom: 32px; background: rgba(0, 0, 0, 0.2); border-radius: 16px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.05); }
 
     .section-title {
-      font-size: 0.72rem;
+      font-family: 'Sora', sans-serif;
+      font-size: 1.05rem;
       font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 14px;
+      color: var(--accent);
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .section-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    /* ===== FIELD ===== */
-    .field { margin-bottom: 16px; }
+    /* Field */
+    .field { margin-bottom: 20px; }
 
     .field label {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
       color: var(--muted);
-      margin-bottom: 7px;
-      letter-spacing: 0.04em;
+      margin-bottom: 8px;
     }
 
     .field input[type="text"],
@@ -199,56 +148,51 @@
     .field select,
     .field input:not([type="file"]) {
       width: 100%;
-      padding: 10px 14px;
-      background: var(--surface2);
+      padding: 12px 16px;
+      background: rgba(24, 24, 27, 0.6);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
       color: var(--text);
       font-family: 'Be Vietnam Pro', sans-serif;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: all 0.3s;
     }
 
     .field input:focus,
     .field select:focus {
-      border-color: rgba(79,140,255,0.5);
-      box-shadow: 0 0 0 3px rgba(79,140,255,0.12);
+      background: rgba(24, 24, 27, 0.9);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
     }
 
     .field select {
       appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237b82a0' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a1a1aa' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 10px center;
-      padding-right: 28px;
+      background-position: right 16px center;
+      padding-right: 36px;
     }
 
-    .field input::placeholder { color: var(--muted); }
+    .field input::placeholder { color: rgba(255, 255, 255, 0.3); }
 
     /* File input */
-    .file-wrap {
-      position: relative;
-    }
-
     .file-label {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      background: var(--surface2);
-      border: 1px dashed rgba(255,255,255,0.15);
-      border-radius: 10px;
+      gap: 12px;
+      padding: 16px;
+      background: rgba(24, 24, 27, 0.6);
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
       cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      font-size: 0.88rem;
+      transition: all 0.3s;
+      font-size: 0.95rem;
       color: var(--muted);
+      position: relative;
     }
 
-    .file-label:hover {
-      border-color: var(--accent);
-      color: var(--text);
-    }
+    .file-label:hover { border-color: var(--accent); color: var(--text); background: rgba(99, 102, 241, 0.05); }
 
     .file-label input[type="file"] {
       position: absolute;
@@ -256,25 +200,24 @@
       opacity: 0;
       cursor: pointer;
       width: 100%;
-      height: 100%;
     }
 
-    .file-icon { font-size: 1.1rem; }
-    .file-name { font-size: 0.82rem; color: var(--accent2); margin-top: 5px; }
+    #file-text { pointer-events: none; }
+    .file-chosen { color: var(--accent2) !important; font-weight: 500; }
 
-    /* ===== UNITS ===== */
-    #units-container { display: flex; flex-direction: column; gap: 10px; }
+    /* Units */
+    #units-container { display: flex; flex-direction: column; gap: 12px; }
 
     .unit-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 12px;
-      padding: 10px 12px;
-      transition: border-color 0.2s;
-      animation: slide-in 0.25s ease both;
+      padding: 12px;
+      transition: all 0.2s;
+      animation: slide-in 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
     }
 
     @keyframes slide-in {
@@ -282,138 +225,121 @@
       to   { opacity: 1; transform: translateX(0); }
     }
 
-    .unit-row:hover { border-color: rgba(255,255,255,0.14); }
+    .unit-row:hover { background: rgba(255, 255, 255, 0.05); }
 
     .unit-row input {
       flex: 1;
-      padding: 8px 10px;
-      background: var(--bg);
-      border: 1px solid transparent;
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
       border-radius: 8px;
       color: var(--text);
       font-family: 'Be Vietnam Pro', sans-serif;
-      font-size: 0.86rem;
+      font-size: 0.9rem;
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.3s;
       min-width: 0;
     }
 
-    .unit-row input:focus { border-color: var(--border-focus); }
-    .unit-row input::placeholder { color: var(--muted); font-size: 0.82rem; }
-
-    .unit-row .price-input { max-width: 120px; }
+    .unit-row input:focus { border-color: var(--accent); }
+    .unit-row input::placeholder { color: rgba(255, 255, 255, 0.3); }
+    .unit-row .price-input { max-width: 140px; }
 
     .btn-remove {
-      width: 30px; height: 30px;
-      background: rgba(255,87,87,0.1);
-      border: 1px solid rgba(255,87,87,0.2);
+      width: 36px; height: 36px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
       border-radius: 8px;
       color: var(--danger);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: 1.2rem;
       flex-shrink: 0;
-      transition: background 0.2s;
+      transition: all 0.2s;
     }
 
-    .btn-remove:hover { background: rgba(255,87,87,0.22); }
+    .btn-remove:hover { background: var(--danger); color: white; }
 
-    /* ===== BUTTONS ===== */
     .btn-add-unit {
       width: 100%;
-      padding: 10px;
-      background: rgba(79,140,255,0.08);
-      border: 1px dashed rgba(79,140,255,0.3);
-      border-radius: 10px;
-      color: var(--accent);
+      padding: 12px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      color: var(--accent2);
       font-family: 'Be Vietnam Pro', sans-serif;
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 4px;
-      transition: background 0.2s, border-color 0.2s;
+      margin-top: 16px;
+      transition: all 0.3s;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 8px;
     }
 
-    .btn-add-unit:hover { background: rgba(79,140,255,0.15); border-color: rgba(79,140,255,0.5); }
+    .btn-add-unit:hover { background: var(--accent2); color: #09090b; }
 
+    /* Actions */
     .form-actions {
       display: flex;
-      gap: 10px;
-      margin-top: 28px;
-      padding-top: 20px;
+      justify-content: flex-end;
+      gap: 16px;
+      margin-top: 32px;
+      padding-top: 24px;
       border-top: 1px solid var(--border);
     }
 
+    .btn-back {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+    }
+
+    .btn-back:hover { background: rgba(255, 255, 255, 0.1); }
+
     .btn-save {
-      flex: 1;
-      padding: 12px;
-      background: linear-gradient(135deg, var(--accent2), #26c6a0);
-      color: #0f1117;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      color: white;
       border: none;
-      border-radius: 10px;
-      font-family: 'Sora', sans-serif;
-      font-size: 0.92rem;
-      font-weight: 700;
+      padding: 12px 32px;
+      border-radius: 12px;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
-      box-shadow: 0 4px 16px rgba(56,232,181,0.25);
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
     }
 
     .btn-save:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(56,232,181,0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
     }
 
-    .btn-save:active { transform: translateY(0); }
+    .req { color: var(--danger); margin-left: 4px; }
 
-    .btn-back {
-      padding: 12px 20px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--muted);
-      font-family: 'Be Vietnam Pro', sans-serif;
-      font-size: 0.88rem;
-      font-weight: 600;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.2s, color 0.2s;
-      white-space: nowrap;
-    }
-
-    .btn-back:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-
-    /* ===== RESPONSIVE ===== */
+    /* Responsive */
     @media (max-width: 600px) {
-      .navbar { padding: 0 16px; }
-      .nav-links {
-        display: none;
-        position: absolute;
-        top: 60px; left: 0; right: 0;
-        background: var(--surface);
-        flex-direction: column;
-        border-bottom: 1px solid var(--border);
-        padding: 8px 0;
-      }
-      .nav-links.show { display: flex; }
-      .nav-links a { border-radius: 0; padding: 12px 20px; }
-      .menu-btn { display: block; }
-
-      .card { padding: 20px 16px; }
+      .card { padding: 24px 16px; }
       .form-actions { flex-direction: column-reverse; }
-      .btn-back { justify-content: center; }
+      .btn-back, .btn-save { width: 100%; justify-content: center; }
+      .item-row select, .item-row input { font-size: 16px; } /* Prevents iOS zoom */
     }
   </style>
 </head>
@@ -422,7 +348,6 @@
 
   <!-- NAVBAR -->
   <%- include('../partials/navbar') %>
-
 
   <div class="page">
     <div class="container">
@@ -440,30 +365,26 @@
 
         <!-- Header -->
         <div class="card-header">
-          <div class="card-icon">✏️</div>
+          <div class="card-icon"><ion-icon name="create-outline"></ion-icon></div>
           <div>
             <div class="card-title">Sửa sản phẩm</div>
-            <!-- Trong EJS thật: <div class="card-subtitle">ID: <%= product.id %></div> -->
             <div class="card-subtitle">ID: <%= product.id %></div>
           </div>
         </div>
 
-        <!-- FORM — trong EJS thật: action="/products/edit/<%= product.id %>" -->
         <form action="/products/edit/<%= product.id %>" method="POST" enctype="multipart/form-data">
 
           <!-- Thông tin cơ bản -->
           <div class="section">
-            <div class="section-title">Thông tin cơ bản</div>
+            <div class="section-title"><ion-icon name="information-circle-outline"></ion-icon> Thông tin cơ bản</div>
 
             <div class="field">
-              <label>Tên sản phẩm</label>
-              <!-- EJS: value="<%= product.name %>" -->
+              <label>Tên sản phẩm <span class="req">*</span></label>
               <input type="text" name="name" value="<%= product.name %>" placeholder="Nhập tên sản phẩm" required>
             </div>
 
             <div class="field">
               <label>Mã barcode</label>
-              <!-- EJS: value="<%= product.barcode %>" -->
               <input type="text" name="barcode" value="<%= product.barcode %>" placeholder="Nhập mã vạch (tuỳ chọn)">
             </div>
 
@@ -480,61 +401,43 @@
 
           <!-- Hình ảnh -->
           <div class="section">
-            <div class="section-title">Hình ảnh</div>
+            <div class="section-title"><ion-icon name="image-outline"></ion-icon> Hình ảnh</div>
 
             <div class="field">
               <label>Đổi hình ảnh (để trống nếu giữ nguyên)</label>
               <div class="file-wrap">
                 <label class="file-label">
-                  <span class="file-icon">📁</span>
-                  <span id="file-text">Chọn file ảnh…</span>
+                  <ion-icon name="cloud-upload-outline" style="font-size: 1.4rem;"></ion-icon>
+                  <span id="file-text">Nhấn để thay đổi ảnh…</span>
                   <input type="file" name="image" accept="image/*" onchange="updateFileName(this)">
                 </label>
               </div>
-              <!-- EJS: value="<%= product.image_url %>" -->
-              <input type="hidden" name="old_image"  value="<%= product.image_url %>">
+              <input type="hidden" name="old_image" value="<%= product.image_url %>">
             </div>
           </div>
 
           <!-- Đơn vị bán -->
           <div class="section">
-            <div class="section-title">Đơn vị bán</div>
+            <div class="section-title"><ion-icon name="pricetags-outline"></ion-icon> Đơn vị bán</div>
 
             <div id="units-container">
               <% product.units.forEach(unit => { %>
               <div class="unit-row">
                 <input type="hidden" name="unit_id[]" value="<%= unit.id %>">
-                <input name="unit_name[]" value="<%= unit.unit_name %>" placeholder="Hộp / Lốc / Thùng">
-                <input name="price_sell[]" value="<%= unit.price_sell %>" placeholder="Giá bán" class="price-input">
-                <button type="button" class="btn-remove" onclick="removeUnit(this)" title="Xoá">✕</button>
+                <input name="unit_name[]" value="<%= unit.unit_name %>" placeholder="Hộp / Lốc / Thùng" required>
+                <input name="price_sell[]" type="number" value="<%= unit.price_sell %>" placeholder="Giá bán (đ)" class="price-input" required>
+                <button type="button" class="btn-remove" onclick="removeUnit(this)" title="Xoá dòng này"><ion-icon name="trash-outline"></ion-icon></button>
               </div>
               <% }) %>
-             
+            </div>
 
-              <!-- Demo rows -->
-              <!-- <div class="unit-row">
-                <input type="hidden" name="unit_id[]" value="1">
-                <input name="unit_name[]" value="Lon" placeholder="Hộp / Lốc / Thùng">
-                <input name="price_sell[]" value="12000" placeholder="Giá bán" class="price-input">
-                <button type="button" class="btn-remove" onclick="removeUnit(this)" title="Xoá">✕</button>
-              </div>
-              <div class="unit-row">
-                <input type="hidden" name="unit_id[]" value="2">
-                <input name="unit_name[]" value="Lốc 6" placeholder="Hộp / Lốc / Thùng">
-                <input name="price_sell[]" value="85000" placeholder="Giá bán" class="price-input">
-                <button type="button" class="btn-remove" onclick="removeUnit(this)" title="Xoá">✕</button>
-              </div>
-            </div> -->
-
-            <button type="button" class="btn-add-unit" onclick="addUnit()" style="margin-top:10px">
-              ＋ Thêm đơn vị
-            </button>
+            <button type="button" class="btn-add-unit" onclick="addUnit()"><ion-icon name="add-outline"></ion-icon> Thêm đơn vị khác</button>
           </div>
 
           <!-- Actions -->
           <div class="form-actions">
-            <a href="/" class="btn-back">↩ Quay lại</a>
-            <button type="submit" class="btn-save">💾 Cập nhật sản phẩm</button>
+            <a href="/products" class="btn-back"><ion-icon name="arrow-back-outline"></ion-icon> Quay lại</a>
+            <button type="submit" class="btn-save"><ion-icon name="save-outline"></ion-icon> Cập nhật sản phẩm</button>
           </div>
 
         </form>
@@ -542,15 +445,18 @@
     </div>
   </div>
 
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
   <script>
     function addUnit() {
       const div = document.createElement("div");
       div.className = "unit-row";
       div.innerHTML = `
         <input type="hidden" name="unit_id[]" value="">
-        <input name="unit_name[]" placeholder="Hộp / Lốc / Thùng">
-        <input name="price_sell[]" placeholder="Giá bán" class="price-input">
-        <button type="button" class="btn-remove" onclick="removeUnit(this)" title="Xoá">✕</button>
+        <input name="unit_name[]" placeholder="Hộp / Lốc / Thùng" required>
+        <input name="price_sell[]" type="number" placeholder="Giá bán (đ)" class="price-input" required>
+        <button type="button" class="btn-remove" onclick="removeUnit(this)" title="Xoá dòng này"><ion-icon name="trash-outline"></ion-icon></button>
       `;
       document.getElementById("units-container").appendChild(div);
       div.querySelector("input[name='unit_name[]']").focus();
@@ -566,11 +472,13 @@
 
     function updateFileName(input) {
       const label = document.getElementById("file-text");
-      label.textContent = input.files[0] ? input.files[0].name : "Chọn file ảnh…";
-    }
-
-    function toggleMenu() {
-      document.getElementById("navLinks").classList.toggle("show");
+      if (input.files && input.files[0]) {
+        label.textContent = input.files[0].name;
+        label.className = "file-chosen";
+      } else {
+        label.textContent = "Nhấn để thay đổi ảnh…";
+        label.className = "";
+      }
     }
   </script>
 

@@ -8,168 +8,223 @@
 
   <style>
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface2: #22263a;
-      --border: rgba(255,255,255,0.07);
-      --accent: #4f8cff;
-      --accent2: #38e8b5;
-      --danger: #ff5757;
-      --text: #e8eaf6;
-      --muted: #7b82a0;
+      --bg: #09090b;
+      --surface: rgba(24, 24, 27, 0.65);
+      --surface2: rgba(39, 39, 42, 0.8);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.5);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent2: #10b981;
+      --danger: #ef4444;
+      --danger-hover: #dc2626;
+      --warning: #f59e0b;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --glass-blur: blur(16px);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Be Vietnam Pro', sans-serif;
-      background: var(--bg);
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.12), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.12), transparent 25%);
+      background-attachment: fixed;
       color: var(--text);
       min-height: 100vh;
     }
 
-    /* ===== NAVBAR ===== */
-    .navbar {
-      background: rgba(26, 29, 39, 0.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      padding: 0 36px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo {
-      font-family: 'Sora', sans-serif;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: var(--accent);
-      letter-spacing: -0.3px;
-      margin-right: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logo-dot {
-      width: 8px; height: 8px;
-      background: var(--accent2);
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.88rem;
-      padding: 6px 14px;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-
-    .nav-links a:hover {
-      background: var(--surface2);
-      color: var(--text);
-    }
-
-    .nav-links a.active {
-      background: rgba(79,140,255,0.15);
-      color: var(--accent);
-    }
-
-    .menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--text);
-      font-size: 22px;
-      cursor: pointer;
-      padding: 4px;
+    ion-icon {
+      font-size: 1.2em;
+      --ionicon-stroke-width: 40px;
+      vertical-align: text-bottom;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1000px; /* Centered, not too wide for cards */
       margin: 0 auto;
-      padding: 24px 36px;
+      padding: 32px 24px 64px;
     }
 
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 24px;
+      margin-bottom: 40px;
     }
 
-    .title { font-size: 1.5rem; font-weight: 600; }
+    .title { 
+      font-family: 'Sora', sans-serif;
+      font-size: 1.8rem; 
+      font-weight: 700; 
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
     .btn {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
       color: white;
       border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
+      padding: 12px 24px;
+      border-radius: 12px;
       text-decoration: none;
-      font-weight: 500;
-      transition: background 0.2s;
+      font-weight: 600;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .btn:hover { background: #3d6bd4; }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .date-group {
+      margin-bottom: 40px;
+      animation: fade-in-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .date-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .date-header h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.2rem;
+      color: var(--accent2);
+      background: rgba(16, 185, 129, 0.1);
+      padding: 8px 16px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      text-transform: capitalize;
+    }
+
+    .date-header .line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
 
     .card {
       background: var(--surface);
-      border-radius: 12px;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: 16px;
       border: 1px solid var(--border);
       overflow: hidden;
       margin-bottom: 16px;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      border-color: rgba(255, 255, 255, 0.15);
     }
 
     .card-header {
-      padding: 16px 20px;
+      padding: 16px 24px;
       border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: rgba(0,0,0,0.2);
     }
 
-    .supplier { font-weight: 600; }
-    .date { color: var(--muted); font-size: 0.9rem; }
+    .supplier { 
+      font-family: 'Sora', sans-serif;
+      font-weight: 600; 
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .supplier ion-icon {
+      color: var(--warning);
+    }
 
     .card-body {
-      padding: 16px 20px;
+      padding: 20px 24px;
     }
 
     .item {
       display: flex;
       justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid var(--border);
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.95rem;
     }
 
     .item:last-child { border-bottom: none; }
 
+    .item-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .item-unit {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .item-calc {
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .total-section {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
     .total {
-      font-weight: 600;
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
       color: var(--accent2);
-      text-align: right;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .note {
       margin-top: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+      color: var(--muted);
+      font-size: 0.9rem;
+      display: flex;
+      gap: 8px;
     }
 
     .actions {
@@ -178,23 +233,68 @@
     }
 
     .btn-edit {
-      background: var(--accent);
-      color: white;
-      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      border: 1px solid var(--border);
       padding: 6px 12px;
-      border-radius: 6px;
+      border-radius: 8px;
       text-decoration: none;
       font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-edit:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
     }
 
     .btn-delete {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-delete:hover {
       background: var(--danger);
       color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 0.85rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 64px 20px;
+      background: var(--surface);
+      backdrop-filter: var(--glass-blur);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    
+    .empty-state ion-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 24px 20px; }
+      .header { flex-direction: column; gap: 16px; align-items: flex-start; }
+      .btn { width: 100%; justify-content: center; }
+      .item { flex-direction: column; gap: 4px; }
+      .item-calc { text-align: right; }
     }
   </style>
 </head>
@@ -204,61 +304,102 @@
 
   <div class="container">
     <div class="header">
-      <h1 class="title">📦 Danh sách nhập hàng</h1>
-      <a href="/imports/create" class="btn">＋ Thêm nhập hàng</a>
+      <h1 class="title"><ion-icon name="download-outline"></ion-icon> Lịch sử Nhập hàng</h1>
+      <a href="/imports/create" class="btn">
+        <ion-icon name="add-circle-outline"></ion-icon> Thêm đơn nhập mới
+      </a>
     </div>
 
 <% 
   const formatMoney = (money) => 
     new Intl.NumberFormat('vi-VN').format(money) + ' đ';
 
-  imports
-    .sort((a, b) => new Date(b.import_date) - new Date(a.import_date))
-    .forEach(importData => { 
+  if (!imports || imports.length === 0) { 
 %>
-<div class="card">
-  <div class="card-header">
-    <div>
-      <div class="supplier"><%= importData.supplier_name %></div>
-      <div class="date">
-        <%= new Date(importData.import_date).toLocaleDateString('vi-VN') %>
+    <div class="empty-state">
+      <ion-icon name="document-text-outline"></ion-icon>
+      <h2>Chưa có đơn nhập hàng nào</h2>
+      <p style="margin-top: 8px;">Hãy bấm vào "Thêm đơn nhập mới" để bắt đầu ghi nhận.</p>
+    </div>
+<% 
+  } else {
+    // Group imports by date
+    const groupedImports = {};
+    imports
+      .sort((a, b) => new Date(b.import_date) - new Date(a.import_date))
+      .forEach(importData => {
+        const dateStr = new Date(importData.import_date).toLocaleDateString('vi-VN', {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+        if (!groupedImports[dateStr]) groupedImports[dateStr] = [];
+        groupedImports[dateStr].push(importData);
+      });
+
+    let delay = 0;
+    Object.keys(groupedImports).forEach(dateStr => { 
+      delay += 0.1;
+%>
+    <div class="date-group" style="animation-delay: <%= delay %>s">
+      <div class="date-header">
+        <h2><ion-icon name="calendar-outline"></ion-icon> <%= dateStr %></h2>
+        <div class="line"></div>
       </div>
+
+      <% groupedImports[dateStr].forEach(importData => { %>
+      <div class="card">
+        <div class="card-header">
+          <div class="supplier">
+            <ion-icon name="business"></ion-icon> <%= importData.supplier_name %>
+          </div>
+          <div class="actions">
+            <a href="/imports/edit/<%= importData.id %>" class="btn-edit">
+              <ion-icon name="create-outline"></ion-icon> Sửa
+            </a>
+            <form method="POST" action="/imports/delete/<%= importData.id %>" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn nhập này không?')">
+              <button type="submit" class="btn-delete">
+                <ion-icon name="trash-outline"></ion-icon> Xóa
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <% importData.items.forEach(item => { %>
+          <div class="item">
+            <div class="item-name">
+              <ion-icon name="cube-outline" style="color: var(--muted);"></ion-icon>
+              <strong><%= item.product_name %></strong>
+              <span class="item-unit"><%= item.unit_name %></span>
+            </div>
+            <div class="item-calc">
+              <%= item.quantity %> × <%= formatMoney(item.price_buy) %> = <strong style="color: var(--text);"><%= formatMoney(item.quantity * item.price_buy) %></strong>
+            </div>
+          </div>
+          <% }) %>
+
+          <% if (importData.note) { %>
+          <div class="note">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <div><strong>Ghi chú:</strong> <%= importData.note %></div>
+          </div>
+          <% } %>
+
+          <div class="total-section">
+            <div class="total">
+              <ion-icon name="wallet-outline"></ion-icon> Tổng: <%= formatMoney(importData.total_amount) %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% }) %>
     </div>
-    <div class="actions">
-      <a href="/imports/edit/<%= importData.id %>" class="btn-edit">✏️ Sửa</a>
-      <form method="POST" action="/imports/delete/<%= importData.id %>" style="display:inline;" onsubmit="return confirm('Xác nhận xóa?')">
-        <button type="submit" class="btn-delete">🗑️ Xóa</button>
-      </form>
-    </div>
+<% 
+    }); 
+  }
+%>
   </div>
 
-  <div class="card-body">
-    <% importData.items.forEach(item => { %>
-    <div class="item">
-      <span>
-        <%= item.product_name %> (<%= item.unit_name %>)
-      </span>
-      <span>
-        <%= item.quantity %> × 
-        <%= formatMoney(item.price_buy) %> 
-        = 
-        <%= formatMoney(item.quantity * item.price_buy) %>
-      </span>
-    </div>
-    <% }) %>
-
-    <div class="total">
-      Tổng: <%= formatMoney(importData.total_amount) %>
-    </div>
-
-    <% if (importData.note) { %>
-    <div style="margin-top: 8px; color: var(--muted); font-size: 0.9rem;">
-      Ghi chú: <%= importData.note %>
-    </div>
-    <% } %>
-  </div>
-</div>
-<% }) %>
-  </div>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
