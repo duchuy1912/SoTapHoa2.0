@@ -260,6 +260,7 @@
   </a>
 
   <div class="nav-links" id="navLinks">
+    <a href="/orders/pos" style="color: var(--nav-accent); font-weight: 600;"><ion-icon name="cart-outline"></ion-icon> Bán hàng (POS)</a>
     <a href="/"><ion-icon name="cube-outline"></ion-icon> Sản phẩm</a>
     <a href="/imports"><ion-icon name="download-outline"></ion-icon> Nhập hàng</a>
     <a href="/reports"><ion-icon name="bar-chart-outline"></ion-icon> Báo cáo</a>
@@ -277,6 +278,7 @@
           <strong><%= user.full_name || user.email %></strong><br>
           <span><%= user.email %></span>
         </div>
+        <a href="/orders/history"><ion-icon name="receipt-outline" style="color: #6366f1; font-size: 1.2rem;"></ion-icon> Lịch sử đơn hàng</a>
         <a href="/auth/logout"><ion-icon name="log-out-outline" style="color: #ef4444; font-size: 1.2rem;"></ion-icon> Đăng xuất</a>
       </div>
     <% } else { %>

@@ -39,6 +39,7 @@ const categoryRoute = require("./modules/categories/category.route");
 const debtRoute = require("./modules/debts/debt.route");
 const importRoutes = require("./modules/imports/import.route");
 const reportRoutes = require("./modules/reports/report.route");
+const orderRoute = require("./modules/orders/order.route");
 
 // Trang chủ → list sản phẩm (cần đăng nhập)
 app.get("/", authMiddleware.isAuthenticated, (req, res) => {
@@ -53,9 +54,12 @@ app.use("/categories", authMiddleware.isAuthenticated, categoryRoute);
 app.use("/debts", authMiddleware.isAuthenticated, debtRoute);
 app.use("/imports", authMiddleware.isAuthenticated, importRoutes);
 app.use("/reports", authMiddleware.isAuthenticated, reportRoutes);
+app.use("/orders", authMiddleware.isAuthenticated, orderRoute);
 console.log("Loading import routes...");
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server chạy tại http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server đang chạy:`);
+  console.log(`- Trên máy tính: http://localhost:${PORT}`);
+  console.log(`- Trên điện thoại: http://192.168.1.29:${PORT}`);
 });

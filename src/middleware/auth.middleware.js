@@ -20,9 +20,9 @@ exports.isAuthenticated = async (req, res, next) => {
     // Xác minh JWT signature
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     req.user = {
+      ...session,
       id: decoded.userId,
-      email: decoded.email,
-      ...session
+      email: decoded.email
     };
 
     next();

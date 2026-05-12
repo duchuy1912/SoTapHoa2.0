@@ -5,6 +5,7 @@
   <title>Sửa sản phẩm</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
     :root {
@@ -341,6 +342,88 @@
       .btn-back, .btn-save { width: 100%; justify-content: center; }
       .item-row select, .item-row input { font-size: 16px; } /* Prevents iOS zoom */
     }
+
+    /* Modal Scanner */
+    .scanner-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .scanner-container {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .scanner-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .scanner-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-close-scanner {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #reader {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid rgba(99, 102, 241, 0.3);
+    }
+    
+    .barcode-input-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-scan {
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: var(--accent);
+      padding: 0 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-scan:hover {
+      background: var(--accent);
+      color: white;
+    }
   </style>
 </head>
 
@@ -385,7 +468,12 @@
 
             <div class="field">
               <label>Mã barcode</label>
-              <input type="text" name="barcode" value="<%= product.barcode %>" placeholder="Nhập mã vạch (tuỳ chọn)">
+              <div class="barcode-input-group">
+                <input type="text" id="barcodeInput" name="barcode" value="<%= product.barcode %>" placeholder="Nhập mã vạch (tuỳ chọn)">
+                <button type="button" class="btn-scan" onclick="openScanner()">
+                  <ion-icon name="barcode-outline"></ion-icon> Quét mã
+                </button>
+              </div>
             </div>
 
             <div class="field">
@@ -445,6 +533,17 @@
     </div>
   </div>
 
+  <!-- Scanner Modal -->
+  <div class="scanner-modal" id="scannerModal">
+    <div class="scanner-container">
+      <div class="scanner-header">
+        <div class="scanner-title"><ion-icon name="scan-outline"></ion-icon> Quét mã vạch</div>
+        <button class="btn-close-scanner" onclick="closeScanner()"><ion-icon name="close-outline"></ion-icon></button>
+      </div>
+      <div id="reader"></div>
+    </div>
+  </div>
+
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
@@ -479,6 +578,50 @@
         label.textContent = "Nhấn để thay đổi ảnh…";
         label.className = "";
       }
+    }
+
+    // Scanner Logic
+    let html5QrcodeScanner = null;
+
+    function openScanner() {
+      const modal = document.getElementById('scannerModal');
+      modal.style.display = 'flex';
+      
+      if (!html5QrcodeScanner) {
+        html5QrcodeScanner = new Html5QrcodeScanner(
+          "reader", 
+          { fps: 10, qrbox: {width: 250, height: 150}, aspectRatio: 1.0 },
+          /* verbose= */ false
+        );
+      }
+      
+      html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    }
+
+    function closeScanner() {
+      const modal = document.getElementById('scannerModal');
+      modal.style.display = 'none';
+      if (html5QrcodeScanner) {
+        html5QrcodeScanner.clear();
+      }
+    }
+
+    function onScanSuccess(decodedText, decodedResult) {
+      document.getElementById('barcodeInput').value = decodedText;
+      closeScanner();
+      
+      // Flash effect on input
+      const input = document.getElementById('barcodeInput');
+      input.style.backgroundColor = 'rgba(16, 185, 129, 0.3)';
+      input.style.borderColor = 'var(--accent2)';
+      setTimeout(() => {
+        input.style.backgroundColor = '';
+        input.style.borderColor = '';
+      }, 500);
+    }
+
+    function onScanFailure(error) {
+      // ignore
     }
   </script>
 

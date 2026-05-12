@@ -20,6 +20,9 @@ exports.getReportsPage = async (req, res) => {
   data.topSuppliers = await Report.getTopSuppliers(10, start, end);
   data.topProducts = await Report.getTopProducts(10, start, end);
 
+  // Lấy báo cáo danh mục cho biểu đồ
+  data.categoryReport = await Report.getCategoryReport(start, end);
+
   // Lấy báo cáo theo loại
   if (type === "supplier") {
     data.supplierReport = await Report.getSupplierReport(start, end);

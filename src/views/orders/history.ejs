@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Lịch sử đơn hàng</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: rgba(24, 24, 27, 0.65);
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #6366f1;
+      --accent2: #10b981;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --glass-blur: blur(16px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.12), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.12), transparent 25%);
+      background-attachment: fixed;
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    ion-icon {
+      font-size: 1.2em;
+      vertical-align: text-bottom;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .page-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #4f46e5);
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .card {
+      background: var(--surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+      animation: fade-in-up 0.5s ease both;
+    }
+
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    th, td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .amount {
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    .btn-view {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .btn-view:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title"><ion-icon name="receipt-outline" style="color: var(--accent);"></ion-icon> Lịch sử đơn hàng</h1>
+      <a href="/orders/pos" class="btn-primary"><ion-icon name="cart-outline"></ion-icon> Tạo đơn mới (POS)</a>
+    </div>
+
+    <div class="card">
+      <% if (orders && orders.length > 0) { %>
+        <table>
+          <thead>
+            <tr>
+              <th>Mã Đơn</th>
+              <th>Ngày Tạo</th>
+              <th style="text-align: right;">Tổng Tiền</th>
+              <th style="text-align: right;">Khách Trả</th>
+              <th style="text-align: center;">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(order => { %>
+              <tr>
+                <td><strong>#<%= order.id %></strong></td>
+                <td><%= new Date(order.created_at).toLocaleString('vi-VN') %></td>
+                <td style="text-align: right;" class="amount"><%= new Intl.NumberFormat('vi-VN').format(order.total_amount) %> đ</td>
+                <td style="text-align: right;"><%= new Intl.NumberFormat('vi-VN').format(order.customer_paid) %> đ</td>
+                <td style="text-align: center;">
+                  <a href="/orders/<%= order.id %>/receipt" target="_blank" class="btn-view">Xem hóa đơn</a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <div style="text-align: center; padding: 40px; color: var(--muted);">
+          <ion-icon name="document-text-outline" style="font-size: 4rem; opacity: 0.5; margin-bottom: 16px;"></ion-icon>
+          <p>Bạn chưa tạo đơn hàng nào.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

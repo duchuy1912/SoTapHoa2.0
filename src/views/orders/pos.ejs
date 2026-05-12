@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Bán hàng - POS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: rgba(24, 24, 27, 0.65);
+      --surface2: rgba(39, 39, 42, 0.8);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.5);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent2: #10b981;
+      --danger: #ef4444;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --glass-blur: blur(16px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.12), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.12), transparent 25%);
+      background-attachment: fixed;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    ion-icon {
+      font-size: 1.2em;
+      --ionicon-stroke-width: 40px;
+      vertical-align: text-bottom;
+    }
+
+    .pos-container {
+      display: flex;
+      flex: 1;
+      padding: 24px;
+      gap: 24px;
+      height: calc(100vh - 64px);
+      overflow: hidden;
+    }
+
+    .pos-left {
+      flex: 7;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+    }
+
+    .pos-right {
+      flex: 3;
+      background: var(--surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      min-width: 350px;
+    }
+
+    .search-bar {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .search-wrapper {
+      flex: 1;
+      position: relative;
+    }
+
+    .btn-action {
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: var(--accent);
+      padding: 10px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-action:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-action.active {
+      background: var(--danger);
+      color: white;
+      border-color: var(--danger);
+    }
+
+    /* Scanner wrapper inside pos-left */
+    #scanner-wrapper {
+      display: none;
+      padding: 20px;
+      background: #000;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+
+    #reader {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid var(--accent);
+    }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .cart-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .cart-table th {
+      text-align: left;
+      padding: 12px;
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--surface2);
+      z-index: 1;
+    }
+
+    .cart-table td {
+      padding: 16px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      vertical-align: middle;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qty-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qty-btn:hover { background: rgba(255, 255, 255, 0.1); }
+    
+    .qty-input {
+      width: 50px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      color: white;
+      border-radius: 6px;
+      padding: 4px;
+      font-family: inherit;
+    }
+
+    .btn-remove {
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+      border: none;
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* RIGHT PANEL */
+    .summary-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Sora', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .summary-body {
+      padding: 24px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.1rem;
+    }
+
+    .summary-row.total {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent2);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+      margin-bottom: 10px;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .field label { color: var(--muted); font-size: 0.95rem; }
+    .field input {
+      width: 100%;
+      padding: 14px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: white;
+      font-size: 1.2rem;
+      font-family: inherit;
+      text-align: right;
+    }
+    .field input:focus { border-color: var(--accent); outline: none; }
+
+    .btn-checkout {
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-top: auto;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+      transition: all 0.3s;
+    }
+
+    .btn-checkout:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-checkout:disabled {
+      background: #3f3f46;
+      cursor: not-allowed;
+      box-shadow: none;
+      color: #71717a;
+    }
+
+    /* TOM SELECT */
+    .ts-wrapper { background: rgba(0, 0, 0, 0.3) !important; border: 1px solid var(--border) !important; border-radius: 12px !important; }
+    .ts-control { background: transparent !important; color: var(--text) !important; border: none !important; padding: 12px 16px !important; }
+    .ts-control input { color: var(--text) !important; font-size: 1rem !important; }
+    .ts-dropdown { background: rgba(24, 24, 27, 0.95) !important; backdrop-filter: blur(20px) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; border-radius: 12px !important; }
+    .ts-dropdown .option { color: var(--text) !important; padding: 12px 16px !important; }
+    .ts-dropdown .option:hover, .ts-dropdown .active { background: rgba(99, 102, 241, 0.2) !important; color: var(--accent) !important; }
+
+    @media (max-width: 900px) {
+      .pos-container { flex-direction: column; overflow: auto; height: auto; }
+      .pos-left { min-height: 500px; }
+    }
+  </style>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="pos-container">
+    <!-- LEFT PANEL: Products & Cart -->
+    <div class="pos-left">
+      <div class="search-bar">
+        <div class="search-wrapper">
+          <select id="product-search" placeholder="Tìm tên sản phẩm hoặc mã vạch..."></select>
+        </div>
+        <button class="btn-action" id="btn-toggle-scanner" onclick="toggleScanner()">
+          <ion-icon name="barcode-outline"></ion-icon> Quét mã vạch
+        </button>
+        <button class="btn-action" style="background: rgba(16, 185, 129, 0.15); color: var(--accent2); border-color: rgba(16,185,129,0.3);" onclick="window.open('/products/create', '_blank')">
+          <ion-icon name="add-outline"></ion-icon> Tạo SP
+        </button>
+      </div>
+
+      <div id="scanner-wrapper">
+        <div id="reader"></div>
+        <p style="margin-top: 10px; color: var(--muted); font-size: 0.9rem;">Đang bật camera quét liên tục...</p>
+      </div>
+
+      <div class="cart-items">
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th width="40%">Sản phẩm</th>
+              <th width="15%">Đơn vị</th>
+              <th width="20%">Số lượng</th>
+              <th width="20%">Thành tiền</th>
+              <th width="5%"></th>
+            </tr>
+          </thead>
+          <tbody id="cart-body">
+            <!-- Items will be injected here via JS -->
+            <tr id="empty-cart-msg">
+              <td colspan="5" style="text-align: center; color: var(--muted); padding: 40px;">
+                <ion-icon name="cart-outline" style="font-size: 3rem; opacity: 0.5; margin-bottom: 10px;"></ion-icon>
+                <p>Chưa có sản phẩm nào trong giỏ hàng</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: Checkout -->
+    <div class="pos-right">
+      <div class="summary-header">Thanh Toán</div>
+      <div class="summary-body">
+        
+        <div class="summary-row total">
+          <span>Tổng cộng:</span>
+          <span id="total-text">0 đ</span>
+        </div>
+
+        <div class="field">
+          <label>Khách thanh toán (đ)</label>
+          <input type="text" id="customer-paid" placeholder="0" oninput="formatAndCalculateChange(this)">
+        </div>
+
+        <div class="summary-row" style="margin-top: 10px;">
+          <span style="color: var(--muted);">Tiền thừa trả khách:</span>
+          <span id="change-text" style="font-weight: 600;">0 đ</span>
+        </div>
+
+        <!-- Hidden form to submit data -->
+        <form id="checkout-form" method="POST" action="/orders/checkout" style="display: none;">
+          <input type="hidden" name="total_amount" id="form-total">
+          <input type="hidden" name="customer_paid" id="form-paid">
+          <input type="hidden" name="change_amount" id="form-change">
+          <div id="form-items-container"></div>
+        </form>
+
+        <button class="btn-checkout" id="btn-checkout" onclick="submitCheckout()" disabled>
+          <ion-icon name="cash-outline"></ion-icon> THANH TOÁN (F9)
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" id="products-data">
+    <%- JSON.stringify(products) %>
+  </script>
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <script>
+    const productsData = JSON.parse(document.getElementById('products-data').textContent);
+    let cart = [];
+    let html5QrcodeScanner = null;
+    let isScannerOpen = false;
+
+    // Định dạng tiền tệ
+    function formatMoney(amount) {
+      return new Intl.NumberFormat('vi-VN').format(Math.round(amount));
+    }
+    
+    // Parse tiền tệ (xóa dấu chấm)
+    function parseMoney(str) {
+      return Number(str.replace(/\./g, '')) || 0;
+    }
+
+    // Khởi tạo Tom Select tìm kiếm
+    const searchSelect = new TomSelect('#product-search', {
+      valueField: 'id',
+      labelField: 'name',
+      searchField: ['name', 'barcode'],
+      options: productsData,
+      render: {
+        option: function(item, escape) {
+          return `<div>
+            <div style="font-weight: 600;">${escape(item.name)}</div>
+            <div style="font-size: 0.85rem; color: var(--muted);">Mã: ${escape(item.barcode || 'N/A')}</div>
+          </div>`;
+        }
+      },
+      onChange: function(value) {
+        if (value) {
+          addToCart(value);
+          this.clear();
+        }
+      }
+    });
+
+    function addToCart(productId, unitId = null) {
+      const product = productsData.find(p => p.id == productId);
+      if (!product) return;
+
+      // Chọn đơn vị mặc định nếu không truyền
+      if (!unitId && product.units && product.units.length > 0) {
+        unitId = product.units[0].id;
+      }
+
+      const existingItem = cart.find(item => item.product.id == productId && item.unitId == unitId);
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        let price = 0;
+        let unitName = '-';
+        if (unitId) {
+          const unit = product.units.find(u => u.id == unitId);
+          if (unit) {
+            price = unit.price_sell;
+            unitName = unit.unit_name;
+          }
+        }
+
+        cart.unshift({
+          id: Date.now().toString(), // unique row id
+          product: product,
+          unitId: unitId,
+          unitName: unitName,
+          price: Number(price),
+          quantity: 1
+        });
+      }
+      
+      renderCart();
+      playBeep();
+    }
+
+    function playBeep() {
+      const audio = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU...');
+      // Giả lập tiếng tít. Trong thực tế cần 1 file âm thanh chuẩn.
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        osc.frequency.value = 800;
+        osc.connect(ctx.destination);
+        osc.start();
+        setTimeout(() => osc.stop(), 100);
+      } catch(e) {}
+    }
+
+    function updateQuantity(rowId, change) {
+      const item = cart.find(i => i.id === rowId);
+      if (item) {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+          removeFromCart(rowId);
+        } else {
+          renderCart();
+        }
+      }
+    }
+
+    function setQuantity(rowId, val) {
+      const item = cart.find(i => i.id === rowId);
+      if (item) {
+        item.quantity = Number(val) || 1;
+        if (item.quantity <= 0) item.quantity = 1;
+        renderCart();
+      }
+    }
+
+    function changeUnit(rowId, selectElement) {
+      const item = cart.find(i => i.id === rowId);
+      if (item) {
+        const newUnitId = selectElement.value;
+        const unit = item.product.units.find(u => u.id == newUnitId);
+        if (unit) {
+          item.unitId = unit.id;
+          item.unitName = unit.unit_name;
+          item.price = Number(unit.price_sell);
+          renderCart();
+        }
+      }
+    }
+
+    function removeFromCart(rowId) {
+      cart = cart.filter(i => i.id !== rowId);
+      renderCart();
+    }
+
+    function renderCart() {
+      const tbody = document.getElementById('cart-body');
+      
+      if (cart.length === 0) {
+        tbody.innerHTML = `
+          <tr id="empty-cart-msg">
+            <td colspan="5" style="text-align: center; color: var(--muted); padding: 40px;">
+              <ion-icon name="cart-outline" style="font-size: 3rem; opacity: 0.5; margin-bottom: 10px;"></ion-icon>
+              <p>Chưa có sản phẩm nào trong giỏ hàng</p>
+            </td>
+          </tr>
+        `;
+        document.getElementById('btn-checkout').disabled = true;
+      } else {
+        tbody.innerHTML = '';
+        document.getElementById('btn-checkout').disabled = false;
+        
+        cart.forEach(item => {
+          let unitOptions = '';
+          if (item.product.units && item.product.units.length > 0) {
+            unitOptions = `<select style="background:rgba(0,0,0,0.3); color:white; border:1px solid var(--border); padding:6px; border-radius:6px;" onchange="changeUnit('${item.id}', this)">
+              ${item.product.units.map(u => `<option value="${u.id}" ${u.id == item.unitId ? 'selected' : ''}>${u.unit_name}</option>`).join('')}
+            </select>`;
+          } else {
+            unitOptions = '-';
+          }
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>
+              <div style="font-weight: 500;">${item.product.name}</div>
+              <div style="font-size: 0.8rem; color: var(--muted);">${formatMoney(item.price)} đ</div>
+            </td>
+            <td>${unitOptions}</td>
+            <td>
+              <div class="qty-control">
+                <button class="qty-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
+                <input class="qty-input" type="text" value="${item.quantity}" onchange="setQuantity('${item.id}', this.value)">
+                <button class="qty-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+              </div>
+            </td>
+            <td style="font-weight: 600; color: var(--accent2);">${formatMoney(item.price * item.quantity)} đ</td>
+            <td>
+              <button class="btn-remove" onclick="removeFromCart('${item.id}')">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      calculateTotal();
+    }
+
+    function calculateTotal() {
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      document.getElementById('total-text').textContent = formatMoney(total) + ' đ';
+      
+      const customerInput = document.getElementById('customer-paid');
+      formatAndCalculateChange(customerInput, total);
+    }
+
+    function formatAndCalculateChange(inputEl, totalAmount = null) {
+      if (totalAmount === null) {
+        totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      }
+
+      // Xóa chữ cái, giữ lại số
+      let val = inputEl.value.replace(/\D/g, '');
+      if (val === '') val = '0';
+      
+      const numVal = parseInt(val, 10);
+      inputEl.value = new Intl.NumberFormat('vi-VN').format(numVal);
+
+      const change = numVal - totalAmount;
+      const changeText = document.getElementById('change-text');
+      if (change < 0) {
+        changeText.textContent = `Thiếu ${formatMoney(Math.abs(change))} đ`;
+        changeText.style.color = 'var(--danger)';
+      } else {
+        changeText.textContent = formatMoney(change) + ' đ';
+        changeText.style.color = 'var(--text)';
+      }
+    }
+
+    // ==== CAMERA SCANNER ====
+    function toggleScanner() {
+      const wrapper = document.getElementById('scanner-wrapper');
+      const btn = document.getElementById('btn-toggle-scanner');
+
+      if (isScannerOpen) {
+        // Tắt scanner
+        wrapper.style.display = 'none';
+        btn.classList.remove('active');
+        btn.innerHTML = '<ion-icon name="barcode-outline"></ion-icon> Quét mã vạch';
+        if (html5QrcodeScanner) {
+          html5QrcodeScanner.clear();
+        }
+        isScannerOpen = false;
+      } else {
+        // Bật scanner
+        wrapper.style.display = 'block';
+        btn.classList.add('active');
+        btn.innerHTML = '<ion-icon name="close-circle-outline"></ion-icon> Tắt quét mã';
+        
+        if (!html5QrcodeScanner) {
+          html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", 
+            { fps: 10, qrbox: {width: 250, height: 100}, aspectRatio: 1.0 },
+            /* verbose= */ false
+          );
+        }
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        isScannerOpen = true;
+      }
+    }
+
+    let lastScannedCode = '';
+    let lastScanTime = 0;
+
+    function onScanSuccess(decodedText) {
+      const now = Date.now();
+      // Chống quét trùng liên tục (debounce 2 giây)
+      if (decodedText === lastScannedCode && (now - lastScanTime) < 2000) {
+        return;
+      }
+
+      lastScannedCode = decodedText;
+      lastScanTime = now;
+
+      // Tìm sản phẩm bằng mã vạch
+      const product = productsData.find(p => p.barcode === decodedText);
+      if (product) {
+        addToCart(product.id);
+        
+        // Hiệu ứng flash màng hình để báo quét thành công
+        const wrapper = document.getElementById('scanner-wrapper');
+        wrapper.style.backgroundColor = 'rgba(16, 185, 129, 0.4)';
+        setTimeout(() => wrapper.style.backgroundColor = '#000', 300);
+      } else {
+        alert("Không tìm thấy sản phẩm với mã: " + decodedText);
+      }
+    }
+
+    function onScanFailure() {}
+
+    // Submit Checkout
+    function submitCheckout() {
+      if (cart.length === 0) return;
+      
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      let customerPaid = parseMoney(document.getElementById('customer-paid').value);
+      if (customerPaid === 0) customerPaid = total; // Mặc định khách đưa đủ
+
+      const change = customerPaid - total;
+
+      document.getElementById('form-total').value = total;
+      document.getElementById('form-paid').value = customerPaid;
+      document.getElementById('form-change').value = change;
+
+      const container = document.getElementById('form-items-container');
+      container.innerHTML = '';
+
+      cart.forEach(item => {
+        container.innerHTML += `
+          <input type="hidden" name="product_id" value="${item.product.id}">
+          <input type="hidden" name="unit_id" value="${item.unitId || ''}">
+          <input type="hidden" name="quantity" value="${item.quantity}">
+          <input type="hidden" name="price_sell" value="${item.price}">
+        `;
+      });
+
+      document.getElementById('checkout-form').submit();
+    }
+
+    // ==== GLOBAL BARCODE SCANNER LISTENER (Dành cho súng quét hoặc Barcode to PC) ====
+    let barcodeBuffer = "";
+    let barcodeTimer = null;
+
+    document.addEventListener('keydown', (e) => {
+      // 1. Phím tắt thanh toán (F9)
+      if (e.key === 'F9') {
+        e.preventDefault();
+        if (!document.getElementById('btn-checkout').disabled) {
+          submitCheckout();
+        }
+        return;
+      }
+
+      // 2. Bỏ qua nếu đang gõ vào ô nhập liệu khác (số lượng, tiền khách đưa...)
+      const activeTag = document.activeElement.tagName.toLowerCase();
+      const isInputFocused = activeTag === 'input' || activeTag === 'textarea';
+      
+      if (isInputFocused) {
+        // Ngoại trừ ô tìm kiếm Tom Select (có class ts-input), vì ta vẫn muốn bắt sự kiện ở đó
+        if (!document.activeElement.closest('.ts-wrapper')) {
+          return;
+        }
+      }
+
+      // 3. Xử lý khi nhấn phím Enter (Kết thúc quét mã)
+      if (e.key === 'Enter') {
+        if (barcodeBuffer.length > 3) {
+          e.preventDefault(); // Ngăn chặn form submit mặc định
+          const scannedCode = barcodeBuffer;
+          barcodeBuffer = ""; // Reset buffer
+          
+          // Nếu đang focus trong TomSelect, blur ra để không bị chọn đúp
+          if (document.activeElement.closest('.ts-wrapper')) {
+             document.activeElement.blur();
+             searchSelect.clear();
+          }
+
+          // Tìm sản phẩm
+          const product = productsData.find(p => p.barcode === scannedCode);
+          if (product) {
+            addToCart(product.id);
+            // Hiệu ứng chớp màn hình nhẹ
+            const leftPanel = document.querySelector('.pos-left');
+            leftPanel.style.transition = 'none';
+            leftPanel.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
+            setTimeout(() => {
+              leftPanel.style.transition = 'background-color 0.3s';
+              leftPanel.style.backgroundColor = '';
+            }, 100);
+          } else {
+            alert("Không tìm thấy sản phẩm với mã: " + scannedCode);
+          }
+        }
+        return;
+      }
+
+      // 4. Bắt các phím số/chữ cái từ súng quét mã
+      if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        barcodeBuffer += e.key;
+        
+        // Vì súng bắn mã/Barcode to PC "gõ" phím rất nhanh (vài ms/phím)
+        // Nên nếu sau 50ms không có phím nào được gõ tiếp, tức là người dùng đang gõ phím tay -> Reset buffer
+        clearTimeout(barcodeTimer);
+        barcodeTimer = setTimeout(() => {
+          // Nếu buffer quá ngắn (vài phím) thì xóa đi vì chắc chắn là gõ tay
+          // Mã vạch thường dài hơn 3-4 số.
+          barcodeBuffer = "";
+        }, 50);
+      }
+    });
+
+  </script>
+</body>
+</html>

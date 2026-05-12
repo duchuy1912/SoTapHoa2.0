@@ -646,6 +646,81 @@
       </div>
       <% } %>
     </div>
+
+    <!-- Biểu đồ cơ cấu ngành hàng -->
+    <% if (categoryReport && categoryReport.length > 0) { %>
+    <div class="card" style="margin-top: 24px;">
+      <h3><ion-icon name="pie-chart-outline" style="color: #6366f1;"></ion-icon> Cơ cấu chi phí nhập theo ngành hàng</h3>
+      <div style="position: relative; height: 350px; width: 100%; display: flex; justify-content: center; margin-top: 20px;">
+        <canvas id="categoryChart"></canvas>
+      </div>
+    </div>
+    
+    <script id="category-data" type="application/json">
+      <%- JSON.stringify(categoryReport) %>
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const categoryData = JSON.parse(document.getElementById('category-data').textContent);
+        
+        const labels = categoryData.map(item => item.category_name);
+        const data = categoryData.map(item => Number(item.total_cost));
+        
+        const total = data.reduce((acc, curr) => acc + curr, 0);
+        
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: data,
+              backgroundColor: [
+                '#6366f1', '#10b981', '#f59e0b', '#ef4444', 
+                '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'
+              ],
+              borderWidth: 0,
+              hoverOffset: 8
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+              legend: {
+                position: 'right',
+                labels: {
+                  color: '#f4f4f5',
+                  font: { family: "'Be Vietnam Pro', sans-serif", size: 13, weight: 500 },
+                  padding: 24,
+                  usePointStyle: true,
+                  pointStyle: 'circle'
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const value = context.raw;
+                    const percentage = ((value / total) * 100).toFixed(1);
+                    const formattedValue = new Intl.NumberFormat('vi-VN').format(value) + ' đ';
+                    return ` ${context.label}: ${formattedValue} (${percentage}%)`;
+                  }
+                },
+                backgroundColor: 'rgba(24, 24, 27, 0.9)',
+                titleFont: { family: "'Be Vietnam Pro', sans-serif", size: 14 },
+                bodyFont: { family: "'Be Vietnam Pro', sans-serif", size: 13 },
+                padding: 14,
+                boxPadding: 8,
+                borderColor: 'rgba(255,255,255,0.1)',
+                borderWidth: 1
+              }
+            }
+          }
+        });
+      });
+    </script>
+    <% } %>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

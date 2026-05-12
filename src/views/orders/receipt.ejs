@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Hóa Đơn #<%= order.id %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Thermal printer styling (80mm width) */
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      background: #f4f4f5;
+      color: #000;
+      margin: 0;
+      padding: 40px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .receipt-container {
+      background: #fff;
+      width: 80mm;
+      padding: 5mm;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      font-size: 13px;
+    }
+
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .text-left { text-align: left; }
+    .bold { font-weight: bold; }
+
+    .header h2 { margin: 0 0 5px; font-size: 18px; }
+    .header p { margin: 2px 0; }
+    
+    .divider {
+      border-bottom: 1px dashed #000;
+      margin: 10px 0;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 4px 0; vertical-align: top; }
+    th { border-bottom: 1px dashed #000; }
+
+    .item-name { max-width: 130px; }
+    .total-row { font-size: 15px; font-weight: bold; margin-top: 10px; padding-top: 5px; border-top: 1px dashed #000; display: flex; justify-content: space-between; }
+    .summary-row { display: flex; justify-content: space-between; margin-top: 2px; }
+
+    .footer { margin-top: 15px; }
+
+    .actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      color: white;
+    }
+
+    .btn-print { background: #6366f1; }
+    .btn-pos { background: #10b981; }
+
+    @media print {
+      body { background: #fff; padding: 0; display: block; margin: 0; }
+      .receipt-container { box-shadow: none; margin: 0; padding: 0; width: auto; }
+      .actions { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="receipt-container">
+    <div class="header text-center">
+      <h2>SỔ TẠP HÓA 2.0</h2>
+      <p>HÓA ĐƠN BÁN LẺ</p>
+      <p>Ngày: <%= new Date(order.created_at).toLocaleString('vi-VN') %></p>
+      <p>Thu ngân: <%= order.user_name %></p>
+      <p>Số HĐ: #<%= order.id %></p>
+    </div>
+
+    <div class="divider"></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th class="text-left">Sản phẩm</th>
+          <th class="text-center">SL</th>
+          <th class="text-right">T.Tiền</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% order.items.forEach(item => { %>
+        <tr>
+          <td class="item-name">
+            <%= item.product_name %><br>
+            <small><%= item.price_sell %> đ <%= item.unit_name ? `(${item.unit_name})` : '' %></small>
+          </td>
+          <td class="text-center"><%= item.quantity %></td>
+          <td class="text-right"><%= new Intl.NumberFormat('vi-VN').format(item.price_sell * item.quantity) %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <div class="total-row">
+      <span>TỔNG CỘNG:</span>
+      <span><%= new Intl.NumberFormat('vi-VN').format(order.total_amount) %> đ</span>
+    </div>
+    
+    <div class="summary-row">
+      <span>Khách đưa:</span>
+      <span><%= new Intl.NumberFormat('vi-VN').format(order.customer_paid) %> đ</span>
+    </div>
+    
+    <div class="summary-row">
+      <span>Tiền thừa:</span>
+      <span><%= new Intl.NumberFormat('vi-VN').format(order.change_amount) %> đ</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="footer text-center">
+      <p>Cảm ơn quý khách!</p>
+      <p>Hẹn gặp lại</p>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-print" onclick="window.print()">In Hóa Đơn</button>
+    <button class="btn btn-pos" onclick="window.location.href='/orders/pos'">Quay Lại POS</button>
+  </div>
+
+</body>
+</html>

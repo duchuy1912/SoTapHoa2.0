@@ -181,3 +181,27 @@ exports.getTopProducts = async (limit = 5, startDate = null, endDate = null) => 
   const result = await db.query(query, params);
   return result.rows;
 };
+
+// Báo cáo theo danh mục
+exports.getCategoryReport = async (startDate = null, endDate = null) => {
+  let query = `
+    SELECT
+      c.name as category_name,
+      COALESCE(SUM(ii.quantity * ii.price_buy), 0) as total_cost
+    FROM import_items ii
+    JOIN imports i ON ii.import_id = i.id
+    JOIN products p ON ii.product_id = p.id
+    JOIN categories c ON p.category_id = c.id
+  `;
+
+  const params = [];
+  if (startDate && endDate) {
+    query += ` WHERE i.import_date BETWEEN $1 AND $2`;
+    params.push(startDate, endDate);
+  }
+
+  query += ` GROUP BY c.id, c.name ORDER BY total_cost DESC`;
+
+  const result = await db.query(query, params);
+  return result.rows;
+};
